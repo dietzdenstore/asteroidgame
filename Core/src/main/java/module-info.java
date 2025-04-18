@@ -1,6 +1,8 @@
 module Core{
+    uses dietz.common.GamePlugin;
     requires javafx.graphics;
     requires javafx.controls;
+    requires Common;
 
-    exports dietz.core;
+    opens dietz.core to javafx.graphics;
 }

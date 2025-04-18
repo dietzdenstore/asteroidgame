@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dietz</groupId>
+        <artifactId>dietz-asteroids</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>Player</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>dietz</groupId>
+            <artifactId>Common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>
