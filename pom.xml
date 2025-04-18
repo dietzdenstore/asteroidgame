@@ -1,29 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>dietz</groupId>
-  <artifactId>dietz-asteroids</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>dietz-asteroids</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>dietz</groupId>
+    <artifactId>dietz-asteroids</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>dietz-asteroids</name>
+
     <modules>
         <module>Core</module>
     </modules>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <javafx.version>21.0.2</javafx.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-        </dependencies>
-    </dependencyManagement>
+
     <build>
         <plugins>
+            <!-- Clean plugin -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.2.0</version>
             </plugin>
+
+            <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
@@ -31,6 +37,28 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+
+            <!-- Copy Core.jar + all org.openjfx jars into mods-mvn -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-all-modules</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>dietz,org.openjfx</includeGroupIds>
+                            <outputDirectory>${project.basedir}/mods-mvn</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Launch your JavaFX Application -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -46,17 +74,22 @@
                     <executable>java</executable>
                     <workingDirectory>.</workingDirectory>
                     <arguments>
+                        <!-- 1) point at modular runtime -->
                         <argument>--module-path=mods-mvn</argument>
+                        <!-- 2) load JavaFX controls (includes graphics & base) -->
+                        <argument>--add-modules=javafx.controls</argument>
+                        <!-- 3) any legacy jars (if you use libs/) -->
                         <argument>--class-path=libs/*</argument>
-                        <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument>
-                        <argument>--module=Core/dk.sdu.mmmi.cbse.main.Main</argument>
-                        <argument>--add-modules=javafx.graphics</argument>
+                        <!-- 4) launch your module/main -->
+                        <argument>--module=Core/dietz.core.App</argument>
                     </arguments>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
     <profiles>
+        <!-- Cleans mods-mvn & libs when running at root -->
         <profile>
             <id>parent-project</id>
             <activation>
@@ -83,6 +116,8 @@
                 </plugins>
             </build>
         </profile>
+
+        <!-- Copies Core.jar into mods-mvn when building the child -->
         <profile>
             <id>child-project</id>
             <activation>
