@@ -1,6 +1,7 @@
 package dietz.player;
 
 import dietz.common.Entity;
+import dietz.player.systems.ShipDesign;
 
 public class Player extends Entity {
     public static final double ACCEL     = 200;  // px/sec²
@@ -10,8 +11,8 @@ public class Player extends Entity {
     private double dx = 0, dy = 0;
 
     public Player() {
-        // narrow triangle pointing up
-        setPolygonCoordinates(0, -10,  7, 10,  -7, 10);
+        ShipDesign design = ShipDesign.random();
+        setPolygonCoordinates(design.getShape());
         setRadius(10f);
         setRotation(0);
     }

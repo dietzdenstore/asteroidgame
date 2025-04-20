@@ -10,98 +10,134 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
+
+
 
 import java.util.*;
 
 public class App extends Application {
     private final GameData gameData = new GameData();
-    private final World world       = new World();
+    private final World world = new World();
+    private Label wallModeLabel = new Label();
     private final List<GamePlugin> plugins = new ArrayList<>();
-    private final Map<String,Node> entityViews = new HashMap<>();
+    private final Map<String, Node> entityViews = new HashMap<>();
+    private Pane root;
+    private Scene scene;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Asteroids Player Demo");
-        Pane root = new Pane();
-        root.setPrefSize(800, 600);
+        root = new Pane();
+        scene = new Scene(root, 800, 600);
 
-        // -- wire keys --
-        Scene scene = new Scene(root);
-        scene.setOnKeyPressed  (e -> handleKey(e, true));
-        scene.setOnKeyReleased (e -> handleKey(e, false));
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Dynamic Asteroids Arena");
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
-        // -- load all plugins via ServiceLoader --
-        ServiceLoader<GamePlugin> loader = ServiceLoader.load(GamePlugin.class);
-        loader.forEach(p -> {
-            plugins.add(p);
-            p.start(gameData, world);
-        });
+        wallModeLabel.setStyle(
+                "-fx-font-size: 16px;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-color: rgba(0, 0, 0, 0.6);" +
+                        "-fx-padding: 4px 8px;" +
+                        "-fx-background-radius: 6px;"
+        );
+        wallModeLabel.setTranslateX(10);
+        wallModeLabel.setTranslateY(10);
+        wallModeLabel.setText("Wall Mode: " + gameData.getWallMode());
+        root.getChildren().add(wallModeLabel);
 
-        // -- game loop --
+
+        setupKeyInput();
+        loadPlugins();
+
+        // Correctly bind arena size directly to scene dimensions
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> resizeArena());
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> resizeArena());
+
+        // Initial sizing
+        resizeArena();
+
+        // Game loop
         new AnimationTimer() {
             private long last = System.nanoTime();
+
             @Override
             public void handle(long now) {
                 float dt = (now - last) / 1_000_000_000f;
                 last = now;
                 gameData.setDeltaTime(dt);
 
-                // update logic
-                for (GamePlugin p : plugins) {
-                    p.update(gameData, world);
-                }
-                // render
-                syncViews(root);
+                plugins.forEach(p -> p.update(gameData, world));
+                syncViews();
             }
         }.start();
     }
 
-    private void handleKey(KeyEvent e, boolean down) {
-        KeyCode code = e.getCode();
-        if (code == KeyCode.UP) {
-            gameData.getKeys().setKey(GameKeys.UP, down);
-        }
-        if (code == KeyCode.LEFT) {
-            gameData.getKeys().setKey(GameKeys.LEFT, down);
-        }
-        if (code == KeyCode.RIGHT) {
-            gameData.getKeys().setKey(GameKeys.RIGHT, down);
-        }
-        if (code == KeyCode.SPACE) {
-            gameData.getKeys().setKey(GameKeys.SPACE, down);
-        }
+    private void setupKeyInput() {
+        scene.setOnKeyPressed(e -> handleKey(e, true));
+        scene.setOnKeyReleased(e -> handleKey(e, false));
+        scene.setOnKeyTyped(e -> {
+            if (e.getCharacter().equals("f")) {
+                Stage stage = (Stage) scene.getWindow();
+                stage.setFullScreen(!stage.isFullScreen());
+            }
+        });
     }
 
-    private void syncViews(Pane root) {
-        // 1) remove views for entities no longer in world
-        var toRemove = new ArrayList<String>();
-        for (var id : entityViews.keySet()) {
+    private void loadPlugins() {
+        ServiceLoader.load(GamePlugin.class).forEach(p -> {
+            plugins.add(p);
+            p.start(gameData, world);
+        });
+    }
+
+    private void resizeArena() {
+        double width = scene.getWidth();
+        double height = scene.getHeight();
+
+        root.setPrefSize(width, height);
+        gameData.setDisplayWidth((int) width);
+        gameData.setDisplayHeight((int) height);
+    }
+
+    private void handleKey(KeyEvent e, boolean down) {
+        KeyCode code = e.getCode();
+        if (code == KeyCode.UP) gameData.getKeys().setKey(GameKeys.UP, down);
+        if (code == KeyCode.LEFT) gameData.getKeys().setKey(GameKeys.LEFT, down);
+        if (code == KeyCode.RIGHT) gameData.getKeys().setKey(GameKeys.RIGHT, down);
+        if (code == KeyCode.SPACE) gameData.getKeys().setKey(GameKeys.SPACE, down);
+        if (code == KeyCode.TAB) {
+            WallCollisionMode current = gameData.getWallMode();
+            WallCollisionMode[] values = WallCollisionMode.values();
+            int nextIndex = (current.ordinal() + 1) % values.length;
+            WallCollisionMode newMode = values[nextIndex];
+            gameData.setWallMode(newMode);
+            wallModeLabel.setText("Wall Mode: " + newMode);
+        }
+
+    }
+
+    private void syncViews() {
+        entityViews.keySet().removeIf(id -> {
             if (world.getEntity(id) == null) {
                 root.getChildren().remove(entityViews.get(id));
-                toRemove.add(id);
+                return true;
             }
-        }
-        toRemove.forEach(entityViews::remove);
+            return false;
+        });
 
-        // 2) for each entity, ensure a Node exists & update its transform
         for (Entity e : world.getEntities()) {
-            String id = e.getID();
-            Node view = entityViews.get(id);
+            Node view = entityViews.get(e.getID());
             if (view == null) {
-                // assume polygon-shaped ships/bullets
                 Polygon poly = new Polygon(e.getPolygonCoordinates());
-                poly.setTranslateX(e.getX());
-                poly.setTranslateY(e.getY());
-                poly.setRotate(e.getRotation());
                 root.getChildren().add(poly);
-                entityViews.put(id, poly);
-            } else {
-                view.setTranslateX(e.getX());
-                view.setTranslateY(e.getY());
-                view.setRotate(e.getRotation());
+                entityViews.put(e.getID(), poly);
+                view = poly;
             }
+            view.setTranslateX(e.getX());
+            view.setTranslateY(e.getY());
+            view.setRotate(e.getRotation());
         }
     }
 

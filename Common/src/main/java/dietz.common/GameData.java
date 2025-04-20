@@ -37,5 +37,15 @@ public class GameData {
         return deltaTime;
     }
 
+    private WallCollisionMode wallMode = WallCollisionMode.BOUNCE;
+
+    public WallCollisionMode getWallMode() {
+        return wallMode;
+    }
+
+    public void setWallMode(WallCollisionMode mode) {
+        this.wallMode = mode;
+    }
+
 
 }
