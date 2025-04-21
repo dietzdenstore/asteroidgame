@@ -16,6 +16,6 @@ public class InputSystem {
     }
 
     public boolean isShooting(GameKeys keys) {
-        return keys.isPressed(GameKeys.SPACE);
+        return keys.isDown(GameKeys.SPACE);
     }
 }

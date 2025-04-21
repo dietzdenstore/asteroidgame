@@ -1,9 +1,12 @@
 package dietz.player.systems;
 
 public enum ShipDesign {
+
     CLASSIC(new double[]{10, 0, -10, -7, -10, 7}),
     ARROWHEAD(new double[]{15, 0, -10, -10, -5, 0, -10, 10}),
     STEALTH(new double[]{12, 0, -8, -8, -4, 0, -8, 8});
+
+
 
     private final double[] shape;
 

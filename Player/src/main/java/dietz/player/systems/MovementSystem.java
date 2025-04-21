@@ -11,6 +11,12 @@ public class MovementSystem {
         clampVelocity(p);
     }
 
+    public void applyDeceleration(Player p, float dt, double decelFactor) {
+        p.setDx(p.getDx() * Math.pow(decelFactor, dt * 60));
+        p.setDy(p.getDy() * Math.pow(decelFactor, dt * 60));
+    }
+
+
     private void clampVelocity(Player p) {
         double speed = Math.hypot(p.getDx(), p.getDy());
         if (speed > Player.MAX_SPEED) {
