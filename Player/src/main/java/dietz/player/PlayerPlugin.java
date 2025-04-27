@@ -16,40 +16,40 @@ public class PlayerPlugin implements GamePlugin {
 
 
     @Override
-    public void start(GameData data, World world) {
-        Player p = new Player();
-        p.setX(data.getDisplayWidth() / 2.0);
-        p.setY(data.getDisplayHeight() / 2.0);
-        playerId = world.addEntity(p);
+    public void start(GameData gameData, World world) {
+        Player player = new Player();
+        player.setX(gameData.getDisplayWidth() / 2.0);
+        player.setY(gameData.getDisplayHeight() / 2.0);
+        playerId = world.addEntity(player);
     }
 
     @Override
-    public void update(GameData data, World world) {
-        float dt = data.getDeltaTime();
-        Player p = (Player) world.getEntity(playerId);
-        GameKeys keys = data.getKeys();
+    public void update(GameData gameData, World world) {
+        float dt = gameData.getDeltaTime();
+        Player player = (Player) world.getEntity(playerId);
+        GameKeys keys = gameData.getKeys();
 
         if (inputSystem.isRotatingLeft(keys))
-            p.setRotation(p.getRotation() - Player.ROT_SPEED * dt);
+            player.setRotation(player.getRotation() - Player.ROT_SPEED * dt);
 
         if (inputSystem.isRotatingRight(keys))
-            p.setRotation(p.getRotation() + Player.ROT_SPEED * dt);
+            player.setRotation(player.getRotation() + Player.ROT_SPEED * dt);
 
         if (inputSystem.isAccelerating(keys)) {
-            movementSystem.applyThrust(p, dt);
+            movementSystem.applyThrust(player, dt);
         } else {
-            movementSystem.applyDeceleration(p, dt, DECELERATION);
+            movementSystem.applyDeceleration(player, dt, DECELERATION);
         }
 
-        movementSystem.moveAndHandleWalls(p, dt, data.getDisplayWidth(), data.getDisplayHeight(), data.getWallMode());
+        movementSystem.moveAndHandleWalls(player, dt, gameData.getDisplayWidth(), gameData.getDisplayHeight(), gameData.getWallMode());
 
         shootCooldown -= dt;
         if (inputSystem.isShooting(keys) && shootCooldown <= 0f) {
-            bulletSystem.spawnBullet(p, world);
-            shootCooldown = FIRE_RATE; // or data.getFireRate()
+            bulletSystem.spawnBullet(player, world);
+            shootCooldown = FIRE_RATE; // or gameData.getFireRate()
         }
 
-        bulletSystem.updateBullets(world, dt, data.getDisplayWidth(), data.getDisplayHeight());
+        bulletSystem.updateBullets(world, dt, gameData.getDisplayWidth(), gameData.getDisplayHeight());
 
         keys.update();
     }

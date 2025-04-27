@@ -4,33 +4,33 @@ import dietz.common.WallCollisionMode;
 import dietz.player.Player;
 
 public class MovementSystem {
-    public void applyThrust(Player p, float dt) {
-        double rad = Math.toRadians(p.getRotation());
-        p.setDx(p.getDx() + Math.cos(rad) * Player.ACCEL * dt);
-        p.setDy(p.getDy() + Math.sin(rad) * Player.ACCEL * dt);
-        clampVelocity(p);
+    public void applyThrust(Player player, float dt) {
+        double rad = Math.toRadians(player.getRotation());
+        player.setDx(player.getDx() + Math.cos(rad) * Player.ACCEL * dt);
+        player.setDy(player.getDy() + Math.sin(rad) * Player.ACCEL * dt);
+        clampVelocity(player);
     }
 
-    public void applyDeceleration(Player p, float dt, double decelFactor) {
-        p.setDx(p.getDx() * Math.pow(decelFactor, dt * 60));
-        p.setDy(p.getDy() * Math.pow(decelFactor, dt * 60));
+    public void applyDeceleration(Player player, float dt, double decelFactor) {
+        player.setDx(player.getDx() * Math.pow(decelFactor, dt * 60));
+        player.setDy(player.getDy() * Math.pow(decelFactor, dt * 60));
     }
 
 
-    private void clampVelocity(Player p) {
-        double speed = Math.hypot(p.getDx(), p.getDy());
+    private void clampVelocity(Player player) {
+        double speed = Math.hypot(player.getDx(), player.getDy());
         if (speed > Player.MAX_SPEED) {
             double scale = Player.MAX_SPEED / speed;
-            p.setDx(p.getDx() * scale);
-            p.setDy(p.getDy() * scale);
+            player.setDx(player.getDx() * scale);
+            player.setDy(player.getDy() * scale);
         }
     }
 
-    public void moveAndHandleWalls(Player p, float dt, int w, int h, WallCollisionMode mode) {
-        double newX = p.getX() + p.getDx() * dt;
-        double newY = p.getY() + p.getDy() * dt;
-        double dx = p.getDx();
-        double dy = p.getDy();
+    public void moveAndHandleWalls(Player player, float dt, int w, int h, WallCollisionMode mode) {
+        double newX = player.getX() + player.getDx() * dt;
+        double newY = player.getY() + player.getDy() * dt;
+        double dx = player.getDx();
+        double dy = player.getDy();
 
         switch (mode) {
             case WRAP:
@@ -57,10 +57,10 @@ public class MovementSystem {
                 break;
         }
 
-        p.setX(newX);
-        p.setY(newY);
-        p.setDx(dx);
-        p.setDy(dy);
+        player.setX(newX);
+        player.setY(newY);
+        player.setDx(dx);
+        player.setDy(dy);
     }
 
 
