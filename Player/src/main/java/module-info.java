@@ -1,5 +1,7 @@
+import dietz.common.services.IGamePlugin;
+
 module Player {
     requires Bullet;
     requires Common;
-    provides dietz.common.GamePlugin with dietz.player.PlayerPlugin;
+    provides IGamePlugin with dietz.player.PlayerPlugin;
 }

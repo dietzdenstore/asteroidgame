@@ -1,5 +1,7 @@
+import dietz.common.services.IGamePlugin;
+
 module Core{
-    uses dietz.common.GamePlugin;
+    uses IGamePlugin;
     requires javafx.graphics;
     requires javafx.controls;
     requires Common;

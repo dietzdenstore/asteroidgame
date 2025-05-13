@@ -2,12 +2,13 @@ package dietz.enemy;
 
 import dietz.bullet.BulletSystem;
 import dietz.common.*;
+import dietz.common.services.IGamePlugin;
 import dietz.enemy.systems.AIDecisionSystem;
 import dietz.enemy.systems.MovementSystem;
 
 import java.util.Random;
 
-public class EnemyPlugin implements GamePlugin {
+public class EnemyPlugin implements IGamePlugin {
     // Add these new fields
     private final AIDecisionSystem aiDecisionSystem = new AIDecisionSystem();
     private final Random random = new Random();
@@ -45,6 +46,11 @@ public class EnemyPlugin implements GamePlugin {
 
         bulletSystem.updateBullets(world, dt,
                 data.getDisplayWidth(), data.getDisplayHeight());
+    }
+
+    @Override
+    public void stop(GameData gameData, World world) {
+
     }
 
     private Entity findPlayerEntity(World world) {

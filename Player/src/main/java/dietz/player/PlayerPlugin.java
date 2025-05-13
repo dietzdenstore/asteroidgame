@@ -1,10 +1,11 @@
 package dietz.player;
 
 import dietz.common.*;
+import dietz.common.services.IGamePlugin;
 import dietz.player.systems.*;
 import dietz.bullet.*;
 
-public class PlayerPlugin implements GamePlugin {
+public class PlayerPlugin implements IGamePlugin {
     private String playerId;
     private final InputSystem inputSystem = new InputSystem();
     private final MovementSystem movementSystem = new MovementSystem();
@@ -52,5 +53,10 @@ public class PlayerPlugin implements GamePlugin {
         bulletSystem.updateBullets(world, dt, gameData.getDisplayWidth(), gameData.getDisplayHeight());
 
         keys.update();
+    }
+
+    @Override
+    public void stop(GameData gameData, World world) {
+
     }
 }

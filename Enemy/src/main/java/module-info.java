@@ -1,5 +1,7 @@
+import dietz.common.services.IGamePlugin;
+
 module Enemy {
     requires Bullet;
     requires Common;
-    provides dietz.common.GamePlugin with dietz.enemy.EnemyPlugin;
+    provides IGamePlugin with dietz.enemy.EnemyPlugin;
 }

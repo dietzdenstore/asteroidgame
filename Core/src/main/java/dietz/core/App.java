@@ -1,13 +1,13 @@
 package dietz.core;
 
 import dietz.common.*;
+import dietz.common.services.IGamePlugin;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -20,7 +20,7 @@ public class App extends Application {
 
     private final GameData gameData = new GameData();
     private final World world = new World();
-    private final List<GamePlugin> plugins = new ArrayList<>();
+    private final List<IGamePlugin> plugins = new ArrayList<>();
     private final Map<String, Node> entityViews = new HashMap<>();
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
@@ -71,7 +71,7 @@ public class App extends Application {
                 gameData.setDeltaTime(dt);
                 updateKeys();
 
-                for (GamePlugin p : plugins) {
+                for (IGamePlugin p : plugins) {
                     p.update(gameData, world);
                 }
 
@@ -127,9 +127,9 @@ public class App extends Application {
     }
 
     private void loadPlugins() {
-        ServiceLoader.load(GamePlugin.class).forEach(new java.util.function.Consumer<GamePlugin>() {
+        ServiceLoader.load(IGamePlugin.class).forEach(new java.util.function.Consumer<IGamePlugin>() {
             @Override
-            public void accept(GamePlugin plugin) {
+            public void accept(IGamePlugin plugin) {
                 plugins.add(plugin);
                 plugin.start(gameData, world);
             }
