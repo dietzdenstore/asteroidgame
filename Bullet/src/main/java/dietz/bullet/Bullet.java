@@ -1,6 +1,6 @@
 package dietz.bullet;
 
-import dietz.common.Entity;
+import dietz.common.data.Entity;
 
 public class Bullet extends Entity {
     private double dx, dy;

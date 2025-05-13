@@ -1,6 +1,6 @@
 package dietz.core;
 
-import dietz.common.*;
+import dietz.common.data.*;
 import dietz.common.services.IGamePlugin;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;

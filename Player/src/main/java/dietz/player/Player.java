@@ -1,6 +1,6 @@
 package dietz.player;
 
-import dietz.common.Entity;
+import dietz.common.data.Entity;
 import dietz.player.systems.ShipDesign;
 
 public class Player extends Entity {

@@ -1,7 +1,9 @@
 package dietz.player;
 
-import dietz.common.*;
+import dietz.common.data.GameData;
+import dietz.common.data.GameKeys;
 import dietz.common.services.IGamePlugin;
+import dietz.common.data.World;
 import dietz.player.systems.*;
 import dietz.bullet.*;
 
@@ -55,8 +57,4 @@ public class PlayerPlugin implements IGamePlugin {
         keys.update();
     }
 
-    @Override
-    public void stop(GameData gameData, World world) {
-
-    }
 }

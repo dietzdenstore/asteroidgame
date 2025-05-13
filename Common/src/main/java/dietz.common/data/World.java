@@ -1,4 +1,4 @@
-package dietz.common;
+package dietz.common.data;
 
 import java.util.ArrayList;
 import java.util.Collection;

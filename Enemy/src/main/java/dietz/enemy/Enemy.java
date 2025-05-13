@@ -1,6 +1,6 @@
 package dietz.enemy;
 
-import dietz.common.Entity;
+import dietz.common.data.Entity;
 import dietz.enemy.systems.ShipDesign;
 
 public class Enemy extends Entity {

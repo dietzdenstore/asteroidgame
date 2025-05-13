@@ -1,6 +1,6 @@
 package dietz.player.systems;
 
-import dietz.common.WallCollisionMode;
+import dietz.common.data.WallCollisionMode;
 import dietz.player.Player;
 
 public class MovementSystem {

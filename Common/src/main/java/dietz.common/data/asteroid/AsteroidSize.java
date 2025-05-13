@@ -1,4 +1,4 @@
-package dietz.common;
+package dietz.common.data.asteroid;
 
 public enum AsteroidSize {
     LARGE(30, true),

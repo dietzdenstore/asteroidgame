@@ -1,10 +1,9 @@
 package dietz.asteroid;
 
 
-import dietz.common.Entity;
-import dietz.common.GameData;
+import dietz.common.data.GameData;
 import dietz.common.services.IGamePlugin;
-import dietz.common.World;
+import dietz.common.data.World;
 
 public class AsteroidPlugin implements IGamePlugin {
 
@@ -18,13 +17,6 @@ public class AsteroidPlugin implements IGamePlugin {
                     Math.random() * 360
             );
             world.addEntity(asteroid);
-        }
-    }
-
-    @Override
-    public void stop(GameData gameData, World world) {
-        for(Entity e : world.getEntities(Asteroid.class)) {
-            world.removeEntity(e);
         }
     }
 

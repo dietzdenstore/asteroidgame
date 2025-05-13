@@ -1,4 +1,4 @@
-package dietz.common;
+package dietz.common.data;
 
 public class GameData {
 

@@ -1,9 +1,7 @@
 package dietz.bullet;
 
-import dietz.common.Entity;
-import dietz.common.World;
-import dietz.bullet.Bullet;
-import dietz.bullet.BulletConfig;
+import dietz.common.data.Entity;
+import dietz.common.data.World;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package dietz.asteroid;
 
-import dietz.common.Entity;
+import dietz.common.data.Entity;
 
 public class Asteroid extends Entity {
     public enum Size {

@@ -1,4 +1,4 @@
-package dietz.common;
+package dietz.common.data;
 
 import java.io.Serializable;
 import java.util.UUID;

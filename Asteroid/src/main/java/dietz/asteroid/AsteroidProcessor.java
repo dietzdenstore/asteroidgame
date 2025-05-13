@@ -1,8 +1,8 @@
 package dietz.asteroid;
 
-import dietz.common.Entity;
-import dietz.common.GameData;
-import dietz.common.World;
+import dietz.common.data.Entity;
+import dietz.common.data.GameData;
+import dietz.common.data.World;
 import dietz.common.services.IEntityProcessing;
 
 public class AsteroidProcessor implements IEntityProcessing {

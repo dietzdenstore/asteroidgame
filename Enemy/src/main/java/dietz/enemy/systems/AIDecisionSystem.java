@@ -1,6 +1,6 @@
 package dietz.enemy.systems;
 
-import dietz.common.Entity;
+import dietz.common.data.Entity;
 import dietz.enemy.Enemy;
 
 import java.util.Random;

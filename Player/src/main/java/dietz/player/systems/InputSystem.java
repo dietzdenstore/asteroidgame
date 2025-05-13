@@ -1,6 +1,6 @@
 package dietz.player.systems;
 
-import dietz.common.GameKeys;
+import dietz.common.data.GameKeys;
 
 public class InputSystem {
     public boolean isRotatingLeft(GameKeys keys) {

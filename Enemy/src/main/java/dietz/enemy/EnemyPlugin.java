@@ -1,8 +1,10 @@
 package dietz.enemy;
 
 import dietz.bullet.BulletSystem;
-import dietz.common.*;
+import dietz.common.data.Entity;
+import dietz.common.data.GameData;
 import dietz.common.services.IGamePlugin;
+import dietz.common.data.World;
 import dietz.enemy.systems.AIDecisionSystem;
 import dietz.enemy.systems.MovementSystem;
 
@@ -46,11 +48,6 @@ public class EnemyPlugin implements IGamePlugin {
 
         bulletSystem.updateBullets(world, dt,
                 data.getDisplayWidth(), data.getDisplayHeight());
-    }
-
-    @Override
-    public void stop(GameData gameData, World world) {
-
     }
 
     private Entity findPlayerEntity(World world) {
