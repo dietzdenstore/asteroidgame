@@ -5,7 +5,6 @@ import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.Health;
 import dietz.common.data.World;
-import dietz.common.services.IGamePlugin;
 import dietz.common.services.IPostEntityProcessing;
 
 import java.util.ArrayList;
