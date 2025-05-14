@@ -1,6 +1,11 @@
 package dietz.asteroid;
 
 import dietz.common.data.Entity;
+import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Asteroid extends Entity {
     public enum Size {
@@ -35,15 +40,23 @@ public class Asteroid extends Entity {
     }
 
     private double[] generateShape() {
-        int points = 12;
-        double[] shape = new double[points * 2];
+        Random random = new Random();
+        int points = 8 + random.nextInt(8);              // 8–15 vertices
+        List<Double> list = new ArrayList<>(points * 2);
+
+        double baseStep = (Math.PI * 2.0) / points;
+        double angle = 0;
+
         for (int i = 0; i < points; i++) {
-            double angle = Math.toRadians(i * 360.0 / points);
-            double variation = size.radius * (0.8 + Math.random() * 0.4);
-            shape[i*2]   = Math.cos(angle) * variation;
-            shape[i*2+1] = Math.sin(angle) * variation;
+            angle += baseStep + (random.nextDouble() - 0.2) * 0.4 * baseStep; // –0.2…+0.2 of baseStep
+            double r = size.radius * (0.5 + random.nextDouble());             // 0.5–1.5×radius
+            list.add(Math.cos(angle) * r);
+            list.add(Math.sin(angle) * r);
         }
-        return shape;
+
+        double[] coords = new double[list.size()];
+        for (int i = 0; i < coords.length; i++) coords[i] = list.get(i);
+        return coords;
     }
 
     public void update(float dt, int width, int height) {

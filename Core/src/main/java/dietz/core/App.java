@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import dietz.common.services.IEntityProcessing;
@@ -39,7 +40,9 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         gamePane = new Pane();
+        gamePane.setStyle("-fx-background-color: black;");
         scene = new Scene(gamePane, 800, 600);
+
 
         setupKeyHandling();
         setupLabels();
@@ -134,7 +137,7 @@ public class App extends Application {
 
     private void setupLabels() {
         wallModeLabel = new Label("Wall Mode: " + gameData.getWallMode());
-        wallModeLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.6);");
+        wallModeLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #ffffff; -fx-background-color: rgba(197,197,197,0.6);");
         wallModeLabel.setTranslateX(10);
         wallModeLabel.setTranslateY(10);
         gamePane.getChildren().add(wallModeLabel);
@@ -175,7 +178,6 @@ public class App extends Application {
                 iterator.remove();
             }
         }
-
         for (Entity e : world.getEntities()) {
             Node view = entityViews.get(e.getID());
             if (view == null) {
@@ -183,6 +185,11 @@ public class App extends Application {
                 poly.setRotate(e.getRotation());
                 poly.setTranslateX(e.getX());
                 poly.setTranslateY(e.getY());
+
+                poly.setFill(Color.TRANSPARENT);
+                poly.setStroke(Color.WHITE);
+                poly.setStrokeWidth(3.5);
+
                 gamePane.getChildren().add(poly);
                 entityViews.put(e.getID(), poly);
             } else {
