@@ -24,6 +24,7 @@ public class PlayerPlugin implements IGamePlugin {
         player.setX(gameData.getDisplayWidth() / 2.0);
         player.setY(gameData.getDisplayHeight() / 2.0);
         playerId = world.addEntity(player);
+        player.setType("player");
     }
 
     @Override

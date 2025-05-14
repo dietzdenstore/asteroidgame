@@ -14,7 +14,7 @@ public class Entity implements Serializable {
     private double y;
     private double rotation;
     private float radius;
-    private String type;
+    private String type = getClass().getSimpleName();
     private final Map<Class<?>, Object> components = new HashMap<>();
 
 

@@ -17,6 +17,7 @@ public class Enemy extends Entity {
         setRadius(10f);
         setRotation(0);
         addComponent(new Health(3));
+        setType("Enemy");
     }
 
     public double getDx() { return dx; }

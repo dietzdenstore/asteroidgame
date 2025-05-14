@@ -24,26 +24,29 @@ public class EnemyPlugin implements IGamePlugin {
         e.setX(data.getDisplayWidth() / 2.0);
         e.setY(data.getDisplayHeight() / 2.0);
         enemyId = world.addEntity(e);
-        e.setType("Enemy");
     }
 
     @Override
     public void update(GameData data, World world) {
         float dt = data.getDeltaTime();
-        Enemy e = (Enemy) world.getEntity(enemyId);
+        Enemy enemy = (Enemy) world.getEntity(enemyId);
+
+        if(enemy == null){
+            return;
+        }
 
         // Find player entity (you'll need to implement this)
         Entity player = findPlayerEntity(world);
 
         // AI-controlled movement
-        aiDecisionSystem.updateAI(e, player, dt);
+        aiDecisionSystem.updateAI(enemy, player, dt);
 
         // Auto-shooting
         if (aiDecisionSystem.shouldShoot(random)) {
-            bulletSystem.spawnBullet(e, world);
+            bulletSystem.spawnBullet(enemy, world);
         }
 
-        movementSystem.moveAndHandleWalls(e, dt,
+        movementSystem.moveAndHandleWalls(enemy, dt,
                 data.getDisplayWidth(), data.getDisplayHeight(),
                 data.getWallMode());
 

@@ -13,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+import dietz.common.services.IEntityProcessing;
+import dietz.common.services.IPostEntityProcessing;
 
 import java.util.*;
 
@@ -31,6 +33,9 @@ public class App extends Application {
     private Label decelLabel;
     private Label fireRateLabel;
 
+    private final List<dietz.common.services.IEntityProcessing> processors     = new ArrayList<>();
+    private final List<dietz.common.services.IPostEntityProcessing> postProcessors = new ArrayList<>();
+
     @Override
     public void start(Stage primaryStage) {
         gamePane = new Pane();
@@ -45,6 +50,7 @@ public class App extends Application {
         primaryStage.show();
 
         loadPlugins();
+        loadProcessors();
         resizeArena();
 
         // Handle resize
@@ -73,6 +79,14 @@ public class App extends Application {
 
                 for (IGamePlugin p : plugins) {
                     p.update(gameData, world);
+                }
+
+                for (dietz.common.services.IEntityProcessing s : processors) {
+                    s.process(gameData, world);
+                }
+
+                for (dietz.common.services.IPostEntityProcessing s : postProcessors) {
+                    s.process(gameData, world);
                 }
 
                 syncViews();
@@ -134,6 +148,14 @@ public class App extends Application {
                 plugin.start(gameData, world);
             }
         });
+    }
+
+    private void loadProcessors() {
+        ServiceLoader.load(dietz.common.services.IEntityProcessing.class)
+                .forEach(processors::add);
+
+        ServiceLoader.load(dietz.common.services.IPostEntityProcessing.class)
+                .forEach(postProcessors::add);
     }
 
     private void resizeArena() {
