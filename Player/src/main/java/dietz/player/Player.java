@@ -1,6 +1,7 @@
 package dietz.player;
 
 import dietz.common.data.Entity;
+import dietz.common.data.Health;
 import dietz.player.systems.ShipDesign;
 
 public class Player extends Entity {
@@ -15,6 +16,7 @@ public class Player extends Entity {
         setPolygonCoordinates(design.getShape());
         setRadius(10f);
         setRotation(0);
+        addComponent(new Health(3));
     }
 
     public double getDx() { return dx; }

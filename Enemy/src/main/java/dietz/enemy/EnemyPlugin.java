@@ -24,6 +24,7 @@ public class EnemyPlugin implements IGamePlugin {
         e.setX(data.getDisplayWidth() / 2.0);
         e.setY(data.getDisplayHeight() / 2.0);
         enemyId = world.addEntity(e);
+        e.setType("Enemy");
     }
 
     @Override

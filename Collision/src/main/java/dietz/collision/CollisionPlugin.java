@@ -1,59 +1,140 @@
 package dietz.collision;
 
-import dietz.asteroid.Asteroid;
+import dietz.common.data.asteroid.IAsteroidSplitter;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
+import dietz.common.data.Health;
 import dietz.common.data.World;
-import dietz.common.data.asteroid.IAsteroidSplitter;
-import dietz.bullet.Bullet;
 import dietz.common.services.IGamePlugin;
-import dietz.enemy.Enemy;
+import dietz.common.services.IPostEntityProcessing;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-public class CollisionPlugin implements IGamePlugin {        // ← changed
+public class CollisionPlugin implements IPostEntityProcessing {
 
-    private final IAsteroidSplitter splitter =
-            ServiceLoader.load(IAsteroidSplitter.class)
-                    .findFirst()
-                    .orElse((e, w) -> {});
+    private final IAsteroidSplitter asteroidSplitter;
 
-    @Override public void start(GameData data, World world) {}
+    public CollisionPlugin() {
+        asteroidSplitter = ServiceLoader.load(IAsteroidSplitter.class)
+                .findFirst()
+                .orElse((original, world) -> {/* no-op */});
+    }
 
+    /* ---------------------------------------------------------- *
+     *  Main hook called by the game loop after movement systems  *
+     * ---------------------------------------------------------- */
     @Override
-    public void update(GameData data, World world) {
-        List<Entity> ents = new ArrayList<>(world.getEntities());
+    public void process(GameData gameData, World world) {
+        List<Entity> entities = new ArrayList<>(world.getEntities());
 
-        for (int i = 0; i < ents.size(); i++) {
-            Entity a = ents.get(i);
-            for (int j = i + 1; j < ents.size(); j++) {
-                Entity b = ents.get(j);
-                if (!collides(a, b)) continue;
-
-                if (a instanceof Bullet && b instanceof Asteroid) {
-                    world.removeEntity(a);
-                    splitter.createSplitAsteroid(b, world);
-                    world.removeEntity(b);
-                } else if (b instanceof Bullet && a instanceof Asteroid) {
-                    world.removeEntity(b);
-                    splitter.createSplitAsteroid(a, world);
-                    world.removeEntity(a);
-                } else if (a instanceof Bullet && b instanceof Enemy) {
-                    world.removeEntity(a);
-                    world.removeEntity(b);
-                } else if (b instanceof Bullet && a instanceof Enemy) {
-                    world.removeEntity(b);
-                    world.removeEntity(a);
+        /*   O(N²) pair-wise test — fine for the small entity counts here   */
+        for (int i = 0; i < entities.size(); i++) {
+            Entity e1 = entities.get(i);
+            for (int j = i + 1; j < entities.size(); j++) {
+                Entity e2 = entities.get(j);
+                if (collides(e1, e2)) {
+                    handleCollisionPair(e1, e2, world);
                 }
             }
         }
     }
 
-    private boolean collides(Entity e1, Entity e2) {
-        double dx = e1.getX() - e2.getX();
-        double dy = e1.getY() - e2.getY();
-        return Math.hypot(dx, dy) < e1.getRadius() + e2.getRadius();
+    /* ---------------------------------------------------------- *
+     *  Per-pair dispatch based on the two type strings            *
+     * ---------------------------------------------------------- */
+    private void handleCollisionPair(Entity e1, Entity e2, World world) {
+        String t1 = e1.getType();
+        String t2 = e2.getType();
+
+        /* ---- Player <-> Asteroid ------------------------------------ */
+        if (t1.equals("Player") && t2.equals("Asteroid")) {
+            world.removeEntity(e1);                 // player dies
+            return;
+        }
+        if (t1.equals("Asteroid") && t2.equals("Player")) {
+            world.removeEntity(e2);
+            return;
+        }
+
+        /* ---- Enemy  <-> Asteroid ------------------------------------ */
+        if (t1.equals("Enemy") && t2.equals("Asteroid")) {
+            world.removeEntity(e1);
+            return;
+        }
+        if (t1.equals("Asteroid") && t2.equals("Enemy")) {
+            world.removeEntity(e2);
+            return;
+        }
+
+        /* ---- Bullet <-> Asteroid  (split) --------------------------- */
+        if (t1.equals("Bullet") && t2.equals("Asteroid")) {
+            world.removeEntity(e1);                         // bullet
+            splitAndRemoveAsteroid(e2, world);             // asteroid
+            return;
+        }
+        if (t1.equals("Asteroid") && t2.equals("Bullet")) {
+            world.removeEntity(e2);
+            splitAndRemoveAsteroid(e1, world);
+            return;
+        }
+
+        /* ---- Bullet <-> Player / Enemy (damage) --------------------- */
+        if (t1.equals("Bullet") && t2.equals("Player")) {
+            damage(e2, world);
+            world.removeEntity(e1);     // always delete the bullet
+            return;
+        }
+        if (t1.equals("Player") && t2.equals("Bullet")) {
+            damage(e1, world);
+            world.removeEntity(e2);
+            return;
+        }
+        if (t1.equals("Bullet") && t2.equals("Enemy")) {
+            damage(e2, world);
+            world.removeEntity(e1);
+            return;
+        }
+        if (t1.equals("Enemy") && t2.equals("Bullet")) {
+            damage(e1, world);
+            world.removeEntity(e2);
+            return;
+        }
+
+        /* ---- Enemy <-> Player (mutual destruction) ------------------ */
+        if (t1.equals("Enemy") && t2.equals("Player")
+                || t1.equals("Player") && t2.equals("Enemy")) {
+            world.removeEntity(e1);
+            world.removeEntity(e2);
+        }
+    }
+
+    /* ---------------------------------------------------------- *
+     *  Helpers                                                   *
+     * ---------------------------------------------------------- */
+
+    private boolean collides(Entity a, Entity b) {
+        float dx = (float) (a.getX() - b.getX());
+        float dy = (float) (a.getY() - b.getY());
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+        return dist < a.getRadius() + b.getRadius();
+    }
+
+    private void splitAndRemoveAsteroid(Entity asteroid, World world) {
+        asteroidSplitter.createSplitAsteroid(asteroid, world);
+        world.removeEntity(asteroid);
+    }
+
+    private void damage(Entity target, World world) {
+        Health hp = target.getComponent(Health.class);
+        if (hp != null) {
+            hp.setHealth(hp.getHealth() - 1);
+            if (hp.getHealth() <= 0) {
+                world.removeEntity(target);
+            }
+        } else {
+            world.removeEntity(target);    // fallback if no HP component
+        }
     }
 }
