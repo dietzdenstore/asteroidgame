@@ -1,8 +1,7 @@
-import dietz.common.services.IGamePlugin;
-
 module Enemy {
-    exports dietz.enemy;
-    requires Bullet;
     requires Common;
-    provides IGamePlugin with dietz.enemy.EnemyPlugin;
+    uses dietz.common.bullet.BulletSPI;
+
+    provides dietz.common.services.IEntityProcessing with dietz.enemy.EnemyControlSystem;
+    provides dietz.common.services.IGamePlugin with dietz.enemy.EnemyPlugin;
 }

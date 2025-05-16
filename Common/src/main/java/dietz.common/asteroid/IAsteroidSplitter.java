@@ -1,4 +1,4 @@
-package dietz.common.data.asteroid;
+package dietz.common.asteroid;
 
 import dietz.common.data.Entity;
 import dietz.common.data.World;

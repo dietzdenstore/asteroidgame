@@ -2,7 +2,7 @@ package dietz.asteroid;
 
 import dietz.common.data.Entity;
 import dietz.common.data.World;
-import dietz.common.data.asteroid.IAsteroidSplitter;
+import dietz.common.asteroid.IAsteroidSplitter;
 
 import java.util.Random;
 

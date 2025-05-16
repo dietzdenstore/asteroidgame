@@ -41,7 +41,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         gamePane = new Pane();
         gamePane.setStyle("-fx-background-color: black;");
-        scene = new Scene(gamePane, 800, 600);
+        scene = new Scene(gamePane, 1600, 900);
 
 
         setupKeyHandling();

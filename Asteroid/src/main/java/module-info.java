@@ -1,3 +1,5 @@
+import dietz.common.asteroid.IAsteroidSplitter;
+
 module Asteroid {
     exports dietz.asteroid;
     requires Common;
@@ -6,5 +8,5 @@ module Asteroid {
 
     provides dietz.common.services.IGamePlugin with dietz.asteroid.AsteroidPlugin;
     provides dietz.common.services.IEntityProcessing with dietz.asteroid.AsteroidProcessor;
-    provides dietz.common.data.asteroid.IAsteroidSplitter with dietz.asteroid.AsteroidSplitter;
+    provides IAsteroidSplitter with dietz.asteroid.AsteroidSplitter;
 }

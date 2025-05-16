@@ -6,7 +6,11 @@ module Common {
 
     exports dietz.common.services;
     exports dietz.common.data;
-    exports dietz.common.data.asteroid;
+    exports dietz.common.asteroid;
+    exports dietz.common.bullet;
 
-    uses IGamePlugin;
+    uses dietz.common.services.IGamePlugin;
+    uses dietz.common.services.IEntityProcessing;
+    uses dietz.common.services.IPostEntityProcessing;
+    uses dietz.common.bullet.BulletSPI;
 }

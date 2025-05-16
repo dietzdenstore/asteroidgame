@@ -1,6 +1,6 @@
 package dietz.collision;
 
-import dietz.common.data.asteroid.IAsteroidSplitter;
+import dietz.common.asteroid.IAsteroidSplitter;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.Health;
