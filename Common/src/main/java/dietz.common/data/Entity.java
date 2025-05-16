@@ -1,5 +1,7 @@
 package dietz.common.data;
 
+import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,5 +87,9 @@ public class Entity implements Serializable {
 
     public <T> boolean hasComponent(Class<T> c) {
         return components.containsKey(c);
+    }
+
+    public Color getBaseColor() {
+        return Color.WHITE;
     }
 }

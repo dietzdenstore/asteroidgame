@@ -41,14 +41,13 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         gamePane = new Pane();
         gamePane.setStyle("-fx-background-color: black;");
-        scene = new Scene(gamePane, 1600, 900);
-
+        scene = new Scene(gamePane, 1920, 900);
 
         setupKeyHandling();
         setupLabels();
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Asteroids Player Demo");
+        primaryStage.setTitle("Dietz Asteroids");
         primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
@@ -83,11 +82,9 @@ public class App extends Application {
                 for (IGamePlugin p : plugins) {
                     p.update(gameData, world);
                 }
-
                 for (dietz.common.services.IEntityProcessing s : processors) {
                     s.process(gameData, world);
                 }
-
                 for (dietz.common.services.IPostEntityProcessing s : postProcessors) {
                     s.process(gameData, world);
                 }
@@ -186,9 +183,11 @@ public class App extends Application {
                 poly.setTranslateX(e.getX());
                 poly.setTranslateY(e.getY());
 
-                poly.setFill(Color.TRANSPARENT);
-                poly.setStroke(Color.WHITE);
-                poly.setStrokeWidth(3.5);
+                Color entityColor = e.getBaseColor();
+
+                poly.setFill(entityColor.darker());
+                poly.setStroke(entityColor.brighter());
+                poly.setStrokeWidth(3);
 
                 gamePane.getChildren().add(poly);
                 entityViews.put(e.getID(), poly);

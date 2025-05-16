@@ -80,4 +80,10 @@ public class Asteroid extends Entity {
     public double getDy() {
         return dy;
     }
+
+    @Override
+    public Color getBaseColor() {
+        return Color.GRAY;
+    }
+
 }

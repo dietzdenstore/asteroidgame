@@ -1,5 +1,6 @@
 module Bullet {
     requires Common;
+    requires javafx.graphics;
 
     uses dietz.common.bullet.BulletSPI;
 

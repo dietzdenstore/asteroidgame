@@ -3,12 +3,13 @@ package dietz.enemy;
 import dietz.common.data.Entity;
 import dietz.common.data.Health;
 import dietz.enemy.systems.ShipDesign;
+import javafx.scene.paint.Color;
 
 /**
  * Simple data‐only entity.
  * ACCEL, MAX_SPEED and ROT_SPEED are used by EnemyControlSystem.
  */
-public class Enemy extends Entity {
+public class    Enemy extends Entity {
     public static final double ACCEL     = 200;  // px/sec²
     public static final double MAX_SPEED = 300;  // px/sec
     public static final double ROT_SPEED = 180;  // deg/sec
@@ -35,4 +36,9 @@ public class Enemy extends Entity {
     public double getDy() { return dy; }
     public void setDx(double dx) { this.dx = dx; }
     public void setDy(double dy) { this.dy = dy; }
+
+    @Override
+    public Color getBaseColor() {
+        return Color.DARKRED;
+    }
 }

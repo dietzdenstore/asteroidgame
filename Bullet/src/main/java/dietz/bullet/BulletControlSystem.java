@@ -9,6 +9,7 @@ import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.World;
 import dietz.common.services.IEntityProcessing;
+import javafx.scene.paint.Color;
 
 public class BulletControlSystem implements IEntityProcessing, BulletSPI {
     @Override

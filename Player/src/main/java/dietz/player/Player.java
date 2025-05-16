@@ -3,6 +3,9 @@ package dietz.player;
 import dietz.common.data.Entity;
 import dietz.common.data.Health;
 import dietz.player.systems.ShipDesign;
+import javafx.scene.paint.Color;
+
+import javax.swing.*;
 
 public class Player extends Entity {
     public static final double ACCEL     = 200;  // px/sec²
@@ -23,4 +26,9 @@ public class Player extends Entity {
     public double getDy() { return dy; }
     public void setDx(double dx) { this.dx = dx; }
     public void setDy(double dy) { this.dy = dy; }
+
+    @Override
+    public Color getBaseColor() {
+        return Color.ROYALBLUE;
+    }
 }
