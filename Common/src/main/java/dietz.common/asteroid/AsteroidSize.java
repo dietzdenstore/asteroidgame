@@ -1,20 +1,39 @@
 package dietz.common.asteroid;
 
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.prefs.BackingStoreException;
+
 public enum AsteroidSize {
-    LARGE(30, true),
-    MEDIUM(20, true),
-    SMALL(10, false);
+    GIANT(300f, 400f, true, 1, 3),
+    LARGE(100f, 200f, true, 1, 5),
+    MEDIUM( 25f,  75f, true, 0, 2),
+    SMALL(   2f,  20f, false,0, 0);
 
-    private final float radius;
+    /** Adjusts how fast they move; bigger → slower. */
+    private static final float BASE_SPEED = 500f;
+
+    private final float minRadius;
+    private final float maxRadius;
     private final boolean canSplit;
+    private final int minFragments;
+    private final int maxFragments;
 
-    AsteroidSize(float radius, boolean canSplit) {
-        this.radius = radius;
-        this.canSplit = canSplit;
+    AsteroidSize(float minRadius,
+                 float maxRadius,
+                 boolean canSplit,
+                 int minFragments,
+                 int maxFragments) {
+        this.minRadius   = minRadius;
+        this.maxRadius   = maxRadius;
+        this.canSplit    = canSplit;
+        this.minFragments= minFragments;
+        this.maxFragments= maxFragments;
     }
-
     public float getRadius() {
-        return radius;
+        if (minRadius == maxRadius) return minRadius;
+
+        // more thread‐friendly than Math.random()
+        return ThreadLocalRandom.current().nextFloat() * (maxRadius - minRadius) + minRadius;
     }
 
     public boolean canSplit() {
@@ -23,9 +42,18 @@ public enum AsteroidSize {
 
     public AsteroidSize nextSize() {
         return switch (this) {
-            case LARGE -> MEDIUM;
+            case GIANT  -> LARGE;
+            case LARGE  -> MEDIUM;
             case MEDIUM -> SMALL;
-            default -> null;
+            case SMALL  -> null;
         };
+    }
+
+    public float getSpeed() {
+        return BASE_SPEED / getRadius();
+    }
+    public int getRandomFragments() {
+        if (maxFragments <= minFragments) return minFragments;
+        return minFragments + (int)(Math.random() * (maxFragments - minFragments + 1));
     }
 }

@@ -47,4 +47,14 @@ public class World {
         return entityMap.get(ID);
     }
 
+    public int getEntityCount(String type) {
+        int count = 0;
+        for (Entity entity : entityMap.values()) {
+            if (type.equals(entity.getType())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

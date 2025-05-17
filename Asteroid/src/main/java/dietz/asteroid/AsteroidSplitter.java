@@ -1,5 +1,6 @@
 package dietz.asteroid;
 
+import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.Entity;
 import dietz.common.data.World;
 import dietz.common.asteroid.IAsteroidSplitter;
@@ -12,27 +13,38 @@ public class AsteroidSplitter implements IAsteroidSplitter {
 
     @Override
     public void createSplitAsteroid(Entity original, World world) {
+        if (!(original instanceof Asteroid parent)) return;
+        AsteroidSize parentSize = parent.getSize();
 
-        // only operate on real asteroids
-        if (!(original instanceof Asteroid big)) return;
+        // Check if splitting is allowed
+        if (!parentSize.canSplit()) return;
 
-        Asteroid.Size size = big.getSize();
-        Asteroid.Size childSize =
-                switch (size) {
-                    case LARGE  -> Asteroid.Size.MEDIUM;
-                    case MEDIUM -> Asteroid.Size.SMALL;
-                    case SMALL  -> null;           // can’t split further
-                };
-        if (childSize == null) return;
+        // Get child size and fragment count
+        AsteroidSize childSize = parentSize.nextSize();
+        int fragments = parentSize.getRandomFragments();
 
-        double x = big.getX(), y = big.getY();
-        float  r = big.getRadius() / 2f;
 
-        for (int i = 0; i < 2; i++) {
-            double dir = random.nextDouble() * 360;
-            Asteroid child = new Asteroid(childSize, x, y, dir);
-            child.setRadius(r);
+        // Create fragments
+        double baseAngle = random.nextDouble() * 360;
+        for (int i = 0; i < fragments; i++) {
+            if (world.getEntityCount("Asteroid") >= AsteroidPlugin.maximumAsteroids) {break;}
+            double angle = baseAngle + (i * 360.0 / fragments);
+            double offset = parentSize.getRadius() + childSize.getRadius();
+
+            double x = parent.getX() + Math.cos(Math.toRadians(angle)) * offset;
+            double y = parent.getY() + Math.sin(Math.toRadians(angle)) * offset;
+
+            // Inherit 50% parent velocity + radial burst
+            double burstSpeed = childSize.getRadius() * 2;
+            double dx = parent.getDx() * 0.5 + Math.cos(Math.toRadians(angle)) * burstSpeed;
+            double dy = parent.getDy() * 0.5 + Math.sin(Math.toRadians(angle)) * burstSpeed;
+
+            Asteroid child = new Asteroid(childSize, x, y, angle);
+            child.setDx(dx);
+            child.setDy(dy);
             world.addEntity(child);
         }
+
+        world.removeEntity(parent); // Remove original after split
     }
 }

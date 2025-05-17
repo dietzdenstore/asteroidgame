@@ -3,6 +3,7 @@ import dietz.common.services.IGamePlugin;
 module Common {
     requires java.desktop;
     requires javafx.graphics;
+    requires java.prefs;
 
     exports dietz.common.services;
     exports dietz.common.data;

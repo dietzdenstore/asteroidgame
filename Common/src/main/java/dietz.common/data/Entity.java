@@ -14,6 +14,8 @@ public class Entity implements Serializable {
     private double[] polygonCoordinates;
     private double x;
     private double y;
+    private double dx;
+    private double dy;
     private double rotation;
     private float radius;
     private String type = getClass().getSimpleName();
@@ -91,5 +93,21 @@ public class Entity implements Serializable {
 
     public Color getBaseColor() {
         return Color.WHITE;
+    }
+
+    public double getDx() {
+        return dx;
+    }
+
+    public void setDx(double dx) {
+        this.dx = dx;
+    }
+
+    public double getDy() {
+        return dy;
+    }
+
+    public void setDy(double dy) {
+        this.dy = dy;
     }
 }

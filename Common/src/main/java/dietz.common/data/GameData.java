@@ -2,6 +2,7 @@ package dietz.common.data;
 
 public class GameData {
 
+
     private int displayWidth  = 1920;
     private int displayHeight = 900;
     private final GameKeys keys = new GameKeys();

@@ -4,6 +4,7 @@ module Asteroid {
     exports dietz.asteroid;
     requires Common;
     requires javafx.graphics;
+    requires java.desktop;
 
 
     provides dietz.common.services.IGamePlugin with dietz.asteroid.AsteroidPlugin;
