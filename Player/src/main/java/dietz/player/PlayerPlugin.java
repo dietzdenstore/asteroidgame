@@ -14,7 +14,6 @@ public class PlayerPlugin implements IGamePlugin {
         Player player = new Player();
         player.setX(gameData.getDisplayWidth()  / 2.0);
         player.setY(gameData.getDisplayHeight() / 2.0);
-        player.setType("Player");  // so systems can find it by tag
 
         // Add to world and remember its ID
         playerId = world.addEntity(player);

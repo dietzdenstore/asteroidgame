@@ -37,8 +37,6 @@ public class AsteroidPlugin implements IGamePlugin {
         double angle = calculateAngleToCenter(pos[0], pos[1], data);
 
         Asteroid asteroid = new Asteroid(size, pos[0], pos[1], angle);
-        asteroid.setType("Asteroid");
-        //asteroid.addComponent(new CollisionCooldown(1.0f)); // Add cooldown component
         world.addEntity(asteroid);
     }
 

@@ -4,10 +4,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.prefs.BackingStoreException;
 
 public enum AsteroidSize {
-    GIANT(300f, 400f, true, 1, 3),
-    LARGE(100f, 200f, true, 1, 5),
-    MEDIUM( 25f,  75f, true, 0, 2),
-    SMALL(   2f,  20f, false,0, 0);
+    GIANT (150f, 400f, true, 1, 2),
+    LARGE ( 75f, 200f, true, 1, 3),
+    MEDIUM( 50f,  75f, true, 0, 2),
+    SMALL ( 25f,  20f, false,0, 0);
 
     /** Adjusts how fast they move; bigger → slower. */
     private static final float BASE_SPEED = 500f;

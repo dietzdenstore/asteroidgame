@@ -109,17 +109,12 @@ public class CollisionPlugin implements IPostEntityProcessing {
     }
 
     private boolean collides(Entity a, Entity b) {
-        if (isImmune(a) || isImmune(b)) return false;
         float dx = (float) (a.getX() - b.getX());
         float dy = (float) (a.getY() - b.getY());
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
         return dist < a.getRadius() + b.getRadius();
     }
 
-    private boolean isImmune(Entity entity) {
-        CollisionCooldown cc = entity.getComponent(CollisionCooldown.class);
-        return cc != null && cc.isActive();
-    }
 
     private void splitAndRemoveAsteroid(Entity asteroid, World world) {
         asteroidSplitter.createSplitAsteroid(asteroid, world);

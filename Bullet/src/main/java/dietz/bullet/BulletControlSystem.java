@@ -12,6 +12,9 @@ import dietz.common.services.IEntityProcessing;
 import javafx.scene.paint.Color;
 
 public class BulletControlSystem implements IEntityProcessing, BulletSPI {
+
+    private static final float BULLET_SPEED = 700f;
+
     @Override
     public Entity createBullet(Entity shooter, GameData gameData) {
         // spawn a fresh Bullet
@@ -40,14 +43,17 @@ public class BulletControlSystem implements IEntityProcessing, BulletSPI {
             // simple linear motion
             double dx = Math.cos(Math.toRadians(e.getRotation()));
             double dy = Math.sin(Math.toRadians(e.getRotation()));
-            e.setX(e.getX() + dx * 3);
-            e.setY(e.getY() + dy * 3);
+            e.setX(e.getX() + dx * BULLET_SPEED * dt);
+            e.setY(e.getY() + dy * BULLET_SPEED * dt);
 
+            /*
             // expire off‐screen
             if (e.getX() < 0 || e.getX() > w ||
                     e.getY() < 0 || e.getY() > h) {
                 toRemove.add(e);
             }
+            */
+
         }
         toRemove.forEach(world::removeEntity);
     }

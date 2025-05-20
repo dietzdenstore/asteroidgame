@@ -29,7 +29,7 @@ public class AsteroidSplitter implements IAsteroidSplitter {
         for (int i = 0; i < fragments; i++) {
             if (world.getEntityCount("Asteroid") >= AsteroidPlugin.maximumAsteroids) {break;}
             double angle = baseAngle + (i * 360.0 / fragments);
-            double offset = parentSize.getRadius() + childSize.getRadius();
+            double offset =  (parentSize.getRadius() + childSize.getRadius())/2;
 
             double x = parent.getX() + Math.cos(Math.toRadians(angle)) * offset;
             double y = parent.getY() + Math.sin(Math.toRadians(angle)) * offset;
