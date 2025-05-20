@@ -23,7 +23,7 @@ public class EnemyControlSystem implements IEntityProcessing {
 
     private static final float CHANGE_INTERVAL   = 1.0f;   // sec between direction changes
     private static final float MOVE_SPEED        = 100.0f; // px/sec
-    private static final float FIRE_RATE         = 0.5f;   // sec between possible shots
+    private static final float FIRE_RATE         = 0.05f;   // sec between possible shots
     private static final double SHOOT_CHANCE     = 0.02;   // chance to shoot each eligible frame
 
     public EnemyControlSystem() {

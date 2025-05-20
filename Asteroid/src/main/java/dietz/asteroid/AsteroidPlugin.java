@@ -5,16 +5,19 @@ import dietz.common.data.GameData;
 import dietz.common.services.IGamePlugin;
 import dietz.common.data.World;
 
+import java.util.Random;
+
 public class AsteroidPlugin implements IGamePlugin {
 
-    private int initialAsteroids = 3;
+    private int initialAsteroids = 5;
     static final int maximumAsteroids = 400;
     private float spawnTimer = 0;
-    private static final float SPAWN_INTERVAL = 7f; // Spawn every 10 seconds
+    private static final float SPAWN_INTERVAL = 10f;
+    private static final double SPAWN_BUFFER = 200.0;
+    private static final Random random = new Random();
 
     @Override
     public void start(GameData gameData, World world) {
-        // Initial spawn of 6 large asteroids
         for (int i = 0; i < initialAsteroids; i++) {
             spawnAsteroid(gameData, world, AsteroidSize.GIANT);
         }
@@ -30,13 +33,27 @@ public class AsteroidPlugin implements IGamePlugin {
         }
     }
 
+
     private void spawnAsteroid(GameData data, World world, AsteroidSize size) {
         if (world.getEntityCount("Asteroid") >= maximumAsteroids) return;
-        // Spawn at screen edge with direction toward center
-        double[] pos = getEdgePosition(data, size.getRadius());
-        double angle = calculateAngleToCenter(pos[0], pos[1], data);
 
+        double[] pos = getEdgePosition(data, size.getRadius());
+        // clamp to buffer circle around (0,0)
+        double dist2 = pos[0] * pos[0] + pos[1] * pos[1];
+        if (dist2 < SPAWN_BUFFER * SPAWN_BUFFER) {
+            double dist = Math.sqrt(dist2);
+            double scale = (SPAWN_BUFFER + size.getRadius()) / (dist == 0 ? 1 : dist);
+            pos[0] *= scale;
+            pos[1] *= scale;
+        }
+
+        double angle = random.nextDouble() * 360;
         Asteroid asteroid = new Asteroid(size, pos[0], pos[1], angle);
+
+        double speed = 50 + random.nextDouble() * 100;
+        asteroid.setDx(Math.cos(Math.toRadians(angle)) * speed);
+        asteroid.setDy(Math.sin(Math.toRadians(angle)) * speed);
+
         world.addEntity(asteroid);
     }
 

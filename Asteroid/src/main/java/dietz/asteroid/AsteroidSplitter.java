@@ -14,31 +14,30 @@ public class AsteroidSplitter implements IAsteroidSplitter {
     @Override
     public void createSplitAsteroid(Entity original, World world) {
         if (!(original instanceof Asteroid parent)) return;
-        AsteroidSize parentSize = parent.getSize();
 
-        // Check if splitting is allowed
+        AsteroidSize parentSize = parent.getSize();
         if (!parentSize.canSplit()) return;
 
-        // Get child size and fragment count
         AsteroidSize childSize = parentSize.nextSize();
         int fragments = parentSize.getRandomFragments();
 
-
-        // Create fragments
+        // fragments
+        double parentDx = parent.getDx();
+        double parentDy = parent.getDy();
+        double parentSpeed = Math.hypot(parentDx, parentDy);
+        double parentAngle = Math.toDegrees(Math.atan2(parentDy, parentDx));
         double baseAngle = random.nextDouble() * 360;
-        for (int i = 0; i < fragments; i++) {
-            if (world.getEntityCount("Asteroid") >= AsteroidPlugin.maximumAsteroids) {break;}
-            double angle = baseAngle + (i * 360.0 / fragments);
-            double offset =  (parentSize.getRadius() + childSize.getRadius())/2;
 
+        for (int i = 0; i < fragments; i++) {
+            if (world.getEntityCount("Asteroid") >= AsteroidPlugin.maximumAsteroids) break;
+            double angle = baseAngle + i * 360.0 / fragments + (random.nextDouble() - 0.5) * 20; // random spread
+            double offset = (parentSize.getRadius() + childSize.getRadius()) / 2.0;
             double x = parent.getX() + Math.cos(Math.toRadians(angle)) * offset;
             double y = parent.getY() + Math.sin(Math.toRadians(angle)) * offset;
-
-            // Inherit 50% parent velocity + radial burst
-            double burstSpeed = childSize.getRadius() * 2;
-            double dx = parent.getDx() * 0.5 + Math.cos(Math.toRadians(angle)) * burstSpeed;
-            double dy = parent.getDy() * 0.5 + Math.sin(Math.toRadians(angle)) * burstSpeed;
-
+            double burstSpeed = childSize.getRadius() * (1 + random.nextDouble());
+            double factor = 0.8 + random.nextDouble() * 0.4;
+            double dx = Math.cos(Math.toRadians(parentAngle)) * parentSpeed * factor + Math.cos(Math.toRadians(angle)) * burstSpeed;
+            double dy = Math.sin(Math.toRadians(parentAngle)) * parentSpeed * factor + Math.sin(Math.toRadians(angle)) * burstSpeed;
             Asteroid child = new Asteroid(childSize, x, y, angle);
             child.setDx(dx);
             child.setDy(dy);

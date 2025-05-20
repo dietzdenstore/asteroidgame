@@ -11,7 +11,6 @@ public class EnemyPlugin implements IGamePlugin {
     @Override
     public void start(GameData gameData, World world) {
         Enemy enemy = new Enemy();
-        // spawn in the center (or wherever you like)
         enemy.setX(gameData.getDisplayWidth()  / 2.0 * Math.random());
         enemy.setY(gameData.getDisplayHeight() / 2.0 * Math.random());
         enemyId = world.addEntity(enemy);
