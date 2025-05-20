@@ -1,7 +1,6 @@
 package dietz.player;
 
 import java.util.ServiceLoader;
-
 import dietz.common.bullet.BulletSPI;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
@@ -16,7 +15,7 @@ import dietz.common.services.IEntityProcessing;
 public class PlayerControlSystem implements IEntityProcessing {
     private final BulletSPI bulletSPI;
     private float shootCooldown = 0f;
-    private static final float FIRE_RATE = 0.2f;
+    private static final float FIRE_RATE = 0.05f;
     private static final double DECELERATION_FACTOR = 0.97;
 
     public PlayerControlSystem() {

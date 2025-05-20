@@ -4,12 +4,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.prefs.BackingStoreException;
 
 public enum AsteroidSize {
-    GIANT (150f, 400f, true, 1, 2),
-    LARGE ( 75f, 200f, true, 1, 3),
-    MEDIUM( 50f,  75f, true, 0, 2),
-    SMALL ( 25f,  20f, false,0, 0);
+    GIANT (90f, 150f, true, 2, 3),
+    LARGE ( 60f, 85f, true, 2, 5),
+    MEDIUM( 40f,55f, true, 1, 7),
+    SMALL ( 20f,  35f, false,0, 2);
 
-    /** Adjusts how fast they move; bigger → slower. */
     private static final float BASE_SPEED = 500f;
 
     private final float minRadius;
@@ -18,11 +17,7 @@ public enum AsteroidSize {
     private final int minFragments;
     private final int maxFragments;
 
-    AsteroidSize(float minRadius,
-                 float maxRadius,
-                 boolean canSplit,
-                 int minFragments,
-                 int maxFragments) {
+    AsteroidSize(float minRadius, float maxRadius, boolean canSplit, int minFragments, int maxFragments) {
         this.minRadius   = minRadius;
         this.maxRadius   = maxRadius;
         this.canSplit    = canSplit;
@@ -32,7 +27,6 @@ public enum AsteroidSize {
     public float getRadius() {
         if (minRadius == maxRadius) return minRadius;
 
-        // more thread‐friendly than Math.random()
         return ThreadLocalRandom.current().nextFloat() * (maxRadius - minRadius) + minRadius;
     }
 
