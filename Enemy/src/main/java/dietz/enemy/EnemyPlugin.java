@@ -1,43 +1,44 @@
-// Enemy/src/main/java/dietz/enemy/EnemyPlugin.java
 package dietz.enemy;
 
 import dietz.common.data.GameData;
 import dietz.common.data.World;
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IGamePluginService;
 
 import java.util.Random;
 
-public class EnemyPlugin implements IGamePlugin {
-    private String enemyId;
+public class EnemyPlugin implements IGamePluginService {
+private float respawnTimer = 0f;
 
-    private static final float RESPAWN_DELAY = 10f; // seconds
-
-    private float respawnTimer = 0f;
     private final Random random = new Random();
 
     @Override
     public void start(GameData gameData, World world) {
-        spawnEnemy(gameData, world);
+            spawnEnemy(gameData, world, Enemy.enemyCount);
+
     }
 
     // Respawn Enemy
     @Override
     public void update(GameData gameData, World world) {
-        if (!world.getEntities(Enemy.class).isEmpty()) {
-            respawnTimer = 0f;
-            return;
-        }
         respawnTimer += gameData.getDeltaTime();
-        if (respawnTimer >= RESPAWN_DELAY) {
-            spawnEnemy(gameData, world);
+        if (respawnTimer >= Enemy.respawnDelay) {
+            int existing = world.getEntities(Enemy.class).size();
+            if (existing < Enemy.maxEnemies) {
+                int toSpawn = random.nextInt(3) + 1;
+                toSpawn = Math.min(toSpawn, Enemy.maxEnemies - existing);
+
+                spawnEnemy(gameData, world, toSpawn);
+            }
             respawnTimer = 0f;
         }
     }
 
-    private void spawnEnemy(GameData gameData, World world) {
-        Enemy enemy = new Enemy();
-        enemy.setX(random.nextDouble() * gameData.getDisplayWidth());
-        enemy.setY(random.nextDouble() * gameData.getDisplayHeight());
-        world.addEntity(enemy);
+    private void spawnEnemy(GameData gameData, World world, int count) {
+        for (int i = 0; i < count; i++) {
+            Enemy enemy = new Enemy();
+            enemy.setX(random.nextDouble() * gameData.getDisplayWidth());
+            enemy.setY(random.nextDouble() * gameData.getDisplayHeight());
+            world.addEntity(enemy);
+        }
     }
 }

@@ -1,5 +1,5 @@
-import dietz.common.services.IEntityProcessing;
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IEntityProcessingService;
+import dietz.common.services.IGamePluginService;
 
 module Player {
     requires Common;
@@ -8,6 +8,6 @@ module Player {
 
     uses dietz.common.bullet.BulletSPI;
 
-    provides IGamePlugin with dietz.player.PlayerPlugin;
-    provides IEntityProcessing with dietz.player.PlayerControlSystem;
+    provides IGamePluginService with dietz.player.PlayerPlugin;
+    provides IEntityProcessingService with dietz.player.PlayerControlSystem;
 }

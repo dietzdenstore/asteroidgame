@@ -1,7 +1,8 @@
 package dietz.core;
 
 import dietz.common.data.*;
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IGamePluginService;
+import dietz.common.services.IPostEntityProcessingService;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -14,8 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
-import dietz.common.services.IEntityProcessing;
-import dietz.common.services.IPostEntityProcessing;
+import dietz.common.services.IEntityProcessingService;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public class App extends Application {
 
     private final GameData gameData = new GameData();
     private final World world = new World();
-    private final List<IGamePlugin> plugins = new ArrayList<>();
+    private final List<IGamePluginService> plugins = new ArrayList<>();
     private final Map<String, Node> entityViews = new HashMap<>();
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
@@ -34,8 +34,8 @@ public class App extends Application {
     private Label decelLabel;
     private Label fireRateLabel;
 
-    private final List<dietz.common.services.IEntityProcessing> processors     = new ArrayList<>();
-    private final List<dietz.common.services.IPostEntityProcessing> postProcessors = new ArrayList<>();
+    private final List<IEntityProcessingService> processors     = new ArrayList<>();
+    private final List<IPostEntityProcessingService> postProcessors = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -79,13 +79,13 @@ public class App extends Application {
                 gameData.setDeltaTime(dt);
                 updateKeys();
 
-                for (IGamePlugin p : plugins) {
+                for (IGamePluginService p : plugins) {
                     p.update(gameData, world);
                 }
-                for (dietz.common.services.IEntityProcessing s : processors) {
+                for (IEntityProcessingService s : processors) {
                     s.process(gameData, world);
                 }
-                for (dietz.common.services.IPostEntityProcessing s : postProcessors) {
+                for (IPostEntityProcessingService s : postProcessors) {
                     s.process(gameData, world);
                 }
 
@@ -141,9 +141,9 @@ public class App extends Application {
     }
 
     private void loadPlugins() {
-        ServiceLoader.load(IGamePlugin.class).forEach(new java.util.function.Consumer<IGamePlugin>() {
+        ServiceLoader.load(IGamePluginService.class).forEach(new java.util.function.Consumer<IGamePluginService>() {
             @Override
-            public void accept(IGamePlugin plugin) {
+            public void accept(IGamePluginService plugin) {
                 plugins.add(plugin);
                 plugin.start(gameData, world);
             }
@@ -151,10 +151,10 @@ public class App extends Application {
     }
 
     private void loadProcessors() {
-        ServiceLoader.load(dietz.common.services.IEntityProcessing.class)
+        ServiceLoader.load(IEntityProcessingService.class)
                 .forEach(processors::add);
 
-        ServiceLoader.load(dietz.common.services.IPostEntityProcessing.class)
+        ServiceLoader.load(IPostEntityProcessingService.class)
                 .forEach(postProcessors::add);
     }
 

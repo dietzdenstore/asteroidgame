@@ -2,15 +2,13 @@ package dietz.player;
 
 import dietz.common.data.Entity;
 import dietz.common.data.Health;
-import dietz.player.systems.ShipDesign;
+import dietz.common.ship.ShipDesign;
 import javafx.scene.paint.Color;
 
-import javax.swing.*;
-
 public class Player extends Entity {
-    public static final double ACCEL     = 300;  // px/sec²
-    public static final double MAX_SPEED = 400;  // px/sec
-    public static final double ROT_SPEED = 250;  // deg/sec
+    public static final double acceleration = 300;  // px/sec²
+    public static final double maxSpeed = 400;  // px/sec
+    public static final double rotationSpeed = 250;  // deg/sec
 
     private double dx = 0, dy = 0;
 

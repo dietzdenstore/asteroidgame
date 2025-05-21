@@ -2,36 +2,33 @@ package dietz.enemy;
 
 import dietz.common.data.Entity;
 import dietz.common.data.Health;
-import dietz.enemy.systems.ShipDesign;
+import dietz.common.ship.ShipDesign;
 import javafx.scene.paint.Color;
 
-/**
- * Simple data‐only entity.
- * ACCEL, MAX_SPEED and ROT_SPEED are used by EnemyControlSystem.
- */
 public class   Enemy extends Entity {
-    public static final double ACCEL     = 300;  // px/sec²
-    public static final double MAX_SPEED = 400;  // px/sec
-    public static final double ROT_SPEED = 250;  // deg/sec
+    public static final double acceleration    = 300;
+    public static final double maxSpeed        = 400;
+    public static final double rotationSpeed   = 250;
 
-    // velocity components
+    // AI & shooting parameters
+    public static final float  changeInterval  = 1.0f;
+    public static final float  fireRate        = 0.05f;
+    public static final double shootChance     = 0.02;
+
+    public static final int     enemyCount   = 5;
+    public static final int     maxEnemies   = 7;
+    public static final float   respawnDelay = 3f;
+
     private double dx = 0, dy = 0;
 
     public Enemy() {
-        // pick a random ship shape
         ShipDesign design = ShipDesign.random();
         setPolygonCoordinates(design.getShape());
         setRadius(10f);
         setRotation(0);
-
-        // give it some health
-        addComponent(new Health(3));
-
-        // so EnemyControlSystem can find it by type if you need
-        setType("Enemy");
+        addComponent(new Health(1));
     }
 
-    // getters/setters for movement
     public double getDx() { return dx; }
     public double getDy() { return dy; }
     public void setDx(double dx) { this.dx = dx; }

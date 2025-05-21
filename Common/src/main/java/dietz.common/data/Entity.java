@@ -10,7 +10,6 @@ import java.util.UUID;
 public class Entity implements Serializable {
 
     private final UUID ID = UUID.randomUUID();
-
     private double[] polygonCoordinates;
     private double x;
     private double y;
@@ -20,6 +19,7 @@ public class Entity implements Serializable {
     private float radius;
     private String type = getClass().getSimpleName();
     private final Map<Class<?>, Object> components = new HashMap<>();
+    private Color color = Color.WHITE;
 
 
     public String getID() {
@@ -92,7 +92,7 @@ public class Entity implements Serializable {
     }
 
     public Color getBaseColor() {
-        return Color.WHITE;
+        return color;
     }
 
     public double getDx() {

@@ -8,28 +8,27 @@ import dietz.common.bullet.BulletSPI;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.World;
-import dietz.common.services.IEntityProcessing;
+import dietz.common.services.IEntityProcessingService;
 
-public class BulletControlSystem implements IEntityProcessing, BulletSPI {
+public class BulletControlSystem implements IEntityProcessingService, BulletSPI {
 
     private static final float velocity = 700f;
 
     @Override
     public Entity createBullet(Entity shooter, GameData gameData) {
-        Bullet b = new Bullet();
-        b.setPolygonCoordinates(1, -1, 1, 1, -1, 1, -1, -1);
-        b.setRadius(1f);
+        Bullet bullet = new Bullet();
+        bullet.setPolygonCoordinates(1, -1, 1, 1, -1, 1, -1, -1);
+        bullet.setRadius(1f);
 
         double dx = Math.cos(Math.toRadians(shooter.getRotation()));
         double dy = Math.sin(Math.toRadians(shooter.getRotation()));
 
-        float safeDist = shooter.getRadius() + b.getRadius() + 2; // 2 px margin
-        b.setX(shooter.getX() + dx * safeDist);
-        b.setY(shooter.getY() + dy * safeDist);
-        b.setRotation(shooter.getRotation());
-        return b;
+        float safeDist = shooter.getRadius() + bullet.getRadius() + 2; // 2 px margin
+        bullet.setX(shooter.getX() + dx * safeDist);
+        bullet.setY(shooter.getY() + dy * safeDist);
+        bullet.setRotation(shooter.getRotation());
+        return bullet;
     }
-
 
     @Override
     public void process(GameData gameData, World world) {
@@ -44,14 +43,6 @@ public class BulletControlSystem implements IEntityProcessing, BulletSPI {
             double dy = Math.sin(Math.toRadians(e.getRotation()));
             e.setX(e.getX() + dx * velocity * dt);
             e.setY(e.getY() + dy * velocity * dt);
-
-            /*
-            // expire off‐screen
-            if (e.getX() < 0 || e.getX() > w ||
-                    e.getY() < 0 || e.getY() > h) {
-                toRemove.add(e);
-            } */
-
         }
         toRemove.forEach(world::removeEntity);
     }

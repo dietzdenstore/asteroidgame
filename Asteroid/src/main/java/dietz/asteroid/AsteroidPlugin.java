@@ -2,18 +2,18 @@ package dietz.asteroid;
 
 import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.GameData;
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IGamePluginService;
 import dietz.common.data.World;
 
 import java.util.Random;
 
-public class AsteroidPlugin implements IGamePlugin {
+public class AsteroidPlugin implements IGamePluginService {
 
     private int initialAsteroids = 5;
-    static final int maximumAsteroids = 400;
+    static final int maximumAsteroids = 150;
     private float spawnTimer = 0;
-    private static final float SPAWN_INTERVAL = 10f;
-    private static final double SPAWN_BUFFER = 200.0;
+    private static final float spawnInterval = 5f;
+    private static final double spawnBuffer = 200.0;
     private static final Random random = new Random();
 
     @Override
@@ -27,7 +27,7 @@ public class AsteroidPlugin implements IGamePlugin {
     public void update(GameData data, World world) {
         // Periodic spawning of random-sized asteroids
         spawnTimer += data.getDeltaTime();
-        if (spawnTimer >= SPAWN_INTERVAL) {
+        if (spawnTimer >= spawnInterval) {
             spawnTimer = 0;
             spawnAsteroid(data, world, getRandomSize());
         }
@@ -40,9 +40,9 @@ public class AsteroidPlugin implements IGamePlugin {
         double[] pos = getEdgePosition(data, size.getRadius());
         // clamp to buffer circle around (0,0)
         double dist2 = pos[0] * pos[0] + pos[1] * pos[1];
-        if (dist2 < SPAWN_BUFFER * SPAWN_BUFFER) {
+        if (dist2 < spawnBuffer * spawnBuffer) {
             double dist = Math.sqrt(dist2);
-            double scale = (SPAWN_BUFFER + size.getRadius()) / (dist == 0 ? 1 : dist);
+            double scale = (spawnBuffer + size.getRadius()) / (dist == 0 ? 1 : dist);
             pos[0] *= scale;
             pos[1] *= scale;
         }

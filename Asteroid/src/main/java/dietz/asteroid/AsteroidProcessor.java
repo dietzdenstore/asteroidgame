@@ -3,9 +3,9 @@ package dietz.asteroid;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.World;
-import dietz.common.services.IEntityProcessing;
+import dietz.common.services.IEntityProcessingService;
 
-public class AsteroidProcessor implements IEntityProcessing {
+public class AsteroidProcessor implements IEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {

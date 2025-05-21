@@ -1,4 +1,6 @@
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IEntityProcessingService;
+import dietz.common.services.IGamePluginService;
+import dietz.common.services.IPostEntityProcessingService;
 
 module Common {
     requires java.desktop;
@@ -9,9 +11,10 @@ module Common {
     exports dietz.common.data;
     exports dietz.common.asteroid;
     exports dietz.common.bullet;
+    exports dietz.common.ship;
 
-    uses dietz.common.services.IGamePlugin;
-    uses dietz.common.services.IEntityProcessing;
-    uses dietz.common.services.IPostEntityProcessing;
+    uses IGamePluginService;
+    uses IEntityProcessingService;
+    uses IPostEntityProcessingService;
     uses dietz.common.bullet.BulletSPI;
 }

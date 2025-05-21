@@ -5,7 +5,7 @@ public class GameKeys {
     private static boolean[] keys;
     private static boolean[] pkeys;
 
-    private static final int NUM_KEYS = 5;
+    private static final int keyAmount = 5;
     public static final int UP = 0;
     public static final int LEFT = 1;
     public static final int RIGHT = 2;
@@ -13,12 +13,12 @@ public class GameKeys {
     public static final int DOWN = 4;
 
     public GameKeys() {
-        keys = new boolean[NUM_KEYS];
-        pkeys = new boolean[NUM_KEYS];
+        keys = new boolean[keyAmount];
+        pkeys = new boolean[keyAmount];
     }
 
     public void update() {
-        for (int i = 0; i < NUM_KEYS; i++) {
+        for (int i = 0; i < keyAmount; i++) {
             pkeys[i] = keys[i];
         }
     }
@@ -31,8 +31,5 @@ public class GameKeys {
         return keys[k];
     }
 
-    public boolean isPressed(int k) {
-        return keys[k] && !pkeys[k];
-    }
 
 }

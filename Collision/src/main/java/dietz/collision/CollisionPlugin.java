@@ -2,13 +2,13 @@ package dietz.collision;
 
 import dietz.common.asteroid.IAsteroidSplitter;
 import dietz.common.data.*;
-import dietz.common.services.IPostEntityProcessing;
+import dietz.common.services.IPostEntityProcessingService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-public class CollisionPlugin implements IPostEntityProcessing {
+public class CollisionPlugin implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
     private static final float EPS = 0.001f;

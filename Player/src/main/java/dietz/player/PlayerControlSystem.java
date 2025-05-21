@@ -7,16 +7,13 @@ import dietz.common.data.GameData;
 import dietz.common.data.GameKeys;
 import dietz.common.data.WallCollisionMode;
 import dietz.common.data.World;
-import dietz.common.services.IEntityProcessing;
+import dietz.common.services.IEntityProcessingService;
 
-/**
- * One-class player controller: handles input, movement, walls, and shooting.
- */
-public class PlayerControlSystem implements IEntityProcessing {
+public class PlayerControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
     private float shootCooldown = 0f;
-    private static final float FIRE_RATE = 0.05f;
-    private static final double DECELERATION_FACTOR = 0.97;
+    private static final float fireRate = 0.05f;
+    private static final double deaccelerationFactor = 0.97;
 
     public PlayerControlSystem() {
         // load any BulletSPI provider (null if Bullet module absent)
@@ -34,29 +31,26 @@ public class PlayerControlSystem implements IEntityProcessing {
             Player p = (Player) e;
             GameKeys keys = gameData.getKeys();
 
-            // —— ROTATION ——
             if (keys.isDown(GameKeys.LEFT)) {
-                p.setRotation(p.getRotation() - Player.ROT_SPEED * dt);
+                p.setRotation(p.getRotation() - Player.rotationSpeed * dt);
             }
             if (keys.isDown(GameKeys.RIGHT)) {
-                p.setRotation(p.getRotation() + Player.ROT_SPEED * dt);
+                p.setRotation(p.getRotation() + Player.rotationSpeed * dt);
             }
-
-            // —— THRUST vs DECELERATION ——
             if (keys.isDown(GameKeys.UP)) {
                 double rad = Math.toRadians(p.getRotation());
-                p.setDx(p.getDx() + Math.cos(rad) * Player.ACCEL * dt);
-                p.setDy(p.getDy() + Math.sin(rad) * Player.ACCEL * dt);
-                // clamp to MAX_SPEED
+                p.setDx(p.getDx() + Math.cos(rad) * Player.acceleration * dt);
+                p.setDy(p.getDy() + Math.sin(rad) * Player.acceleration * dt);
+
                 double speed = Math.hypot(p.getDx(), p.getDy());
-                if (speed > Player.MAX_SPEED) {
-                    double scale = Player.MAX_SPEED / speed;
+                if (speed > Player.maxSpeed) {
+                    double scale = Player.maxSpeed / speed;
                     p.setDx(p.getDx() * scale);
                     p.setDy(p.getDy() * scale);
                 }
             } else {
-                p.setDx(p.getDx() * Math.pow(DECELERATION_FACTOR, dt * 60));
-                p.setDy(p.getDy() * Math.pow(DECELERATION_FACTOR, dt * 60));
+                p.setDx(p.getDx() * Math.pow(deaccelerationFactor, dt * 60));
+                p.setDy(p.getDy() * Math.pow(deaccelerationFactor, dt * 60));
             }
 
             // —— MOVE & HANDLE WALLS ——
@@ -96,14 +90,12 @@ public class PlayerControlSystem implements IEntityProcessing {
             p.setDx(dx);
             p.setDy(dy);
 
-            // —— SHOOTING ——
             shootCooldown -= dt;
             if (bulletSPI != null && keys.isDown(GameKeys.SPACE) && shootCooldown <= 0f) {
                 world.addEntity(bulletSPI.createBullet(p, gameData));
-                shootCooldown = FIRE_RATE;
+                shootCooldown = fireRate;
             }
 
-            // —— UPDATE KEY STATES ——
             keys.update();
         }
     }

@@ -10,24 +10,22 @@ import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.WallCollisionMode;
 import dietz.common.data.World;
-import dietz.common.services.IEntityProcessing;
+import dietz.common.services.IEntityProcessingService;
 
-public class EnemyControlSystem implements IEntityProcessing {
+public class EnemyControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
     private final Random random = new Random();
 
-    // Stores per-enemy timers & directions
     private final Map<String, Float> dirTimers    = new HashMap<>();
     private final Map<String, Double> dirAngles   = new HashMap<>();
     private final Map<String, Float>   shootCd    = new HashMap<>();
 
-    private static final float CHANGE_INTERVAL   = 1.0f;   // sec between direction changes
-    private static final float MOVE_SPEED        = 100.0f; // px/sec
-    private static final float FIRE_RATE         = 0.05f;   // sec between possible shots
-    private static final double SHOOT_CHANCE     = 0.02;   // chance to shoot each eligible frame
+    private static final float changeInterval = 1.0f;
+    private static final float moveSpeed = 100.0f;
+    private static final float fireRate = 0.05f;
+    private static final double shootChance = 0.02;
 
     public EnemyControlSystem() {
-        // load bullet factory or null if missing
         this.bulletSPI = ServiceLoader
                 .load(BulletSPI.class)
                 .findFirst()
@@ -44,21 +42,16 @@ public class EnemyControlSystem implements IEntityProcessing {
         for (Entity e : world.getEntities(Enemy.class)) {
             Enemy enemy = (Enemy) e;
             String id   = enemy.getID();
-
-            // — Update direction timer —
             float t = dirTimers.getOrDefault(id, 0f) - dt;
             if (t <= 0) {
-                // pick new random angle
                 double angle = random.nextDouble() * 360;
                 dirAngles.put(id, angle);
-                t = CHANGE_INTERVAL;
+                t = changeInterval;
             }
             dirTimers.put(id, t);
-
-            // — Move in that direction —
             double angleRad = Math.toRadians(dirAngles.get(id));
-            double dx = Math.cos(angleRad) * MOVE_SPEED * dt;
-            double dy = Math.sin(angleRad) * MOVE_SPEED * dt;
+            double dx = Math.cos(angleRad) * moveSpeed * dt;
+            double dy = Math.sin(angleRad) * moveSpeed * dt;
 
             double nx = enemy.getX() + dx;
             double ny = enemy.getY() + dy;
@@ -93,13 +86,14 @@ public class EnemyControlSystem implements IEntityProcessing {
             enemy.setY(ny);
             enemy.setRotation(dirAngles.get(id));
 
-            // — Shooting cooldown —
+            // Shooting cooldown
             float sc = shootCd.getOrDefault(id, 0f) - dt;
             if (sc < 0) sc = 0;
+
             // random shoot chance
-            if (bulletSPI != null && sc <= 0 && random.nextDouble() < SHOOT_CHANCE) {
+            if (bulletSPI != null && sc <= 0 && random.nextDouble() < shootChance) {
                 world.addEntity(bulletSPI.createBullet(enemy, gameData));
-                sc = FIRE_RATE;
+                sc = fireRate;
             }
             shootCd.put(id, sc);
         }

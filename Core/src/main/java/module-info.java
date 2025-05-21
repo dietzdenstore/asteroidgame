@@ -1,9 +1,11 @@
-import dietz.common.services.IGamePlugin;
+import dietz.common.services.IEntityProcessingService;
+import dietz.common.services.IGamePluginService;
+import dietz.common.services.IPostEntityProcessingService;
 
 module Core{
-    uses dietz.common.services.IGamePlugin;
-    uses dietz.common.services.IEntityProcessing;
-    uses dietz.common.services.IPostEntityProcessing;
+    uses IGamePluginService;
+    uses IEntityProcessingService;
+    uses IPostEntityProcessingService;
 
 
     requires javafx.graphics;

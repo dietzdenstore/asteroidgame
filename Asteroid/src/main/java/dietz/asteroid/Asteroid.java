@@ -10,7 +10,6 @@ public class Asteroid extends Entity {
     private final AsteroidSize size;
     private final float        radius;   // the one true radius
     private final double       dx, dy;   // velocities based on that radius
-    private float collisionCooldown;
     private static final Random random = new Random();
 
     public Asteroid(AsteroidSize size, double x, double y, double direction) {
@@ -37,12 +36,8 @@ public class Asteroid extends Entity {
         this.dy = Math.sin(rad) * speed;
     }
 
-    /**
-     * Generates an 8-point polygon using the *fixed* baseRadius.
-     * Jitters each vertex radius by ±20%.
-     */
     private double[] generateShape(float baseRadius) {
-        final int vertices   = random.nextInt(16,24) ;
+        final int vertices   = random.nextInt(8,24) ;
         double[] shape       = new double[vertices * 2];
         double angleStep     = 2 * Math.PI / vertices;
 
@@ -59,6 +54,7 @@ public class Asteroid extends Entity {
         return shape;
     }
 
+    /*
     public void update(float dt, int width, int height) {
         setX(getX() + dx * dt);
         setY(getY() + dy * dt);
@@ -70,6 +66,7 @@ public class Asteroid extends Entity {
         if (getY() < -radius)              setY(height + radius);
         else if (getY() > height + radius) setY(-radius);
     }
+     */
 
     public AsteroidSize getSize() {
         return size;
@@ -80,7 +77,4 @@ public class Asteroid extends Entity {
         return Color.GRAY;
     }
 
-    public float getCollisionCooldown() {
-        return collisionCooldown;
-    }
 }

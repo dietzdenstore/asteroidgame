@@ -1,4 +1,6 @@
 import dietz.common.asteroid.IAsteroidSplitter;
+import dietz.common.services.IEntityProcessingService;
+import dietz.common.services.IGamePluginService;
 
 module Asteroid {
     exports dietz.asteroid;
@@ -7,7 +9,7 @@ module Asteroid {
     requires java.desktop;
 
 
-    provides dietz.common.services.IGamePlugin with dietz.asteroid.AsteroidPlugin;
-    provides dietz.common.services.IEntityProcessing with dietz.asteroid.AsteroidProcessor;
+    provides IGamePluginService with dietz.asteroid.AsteroidPlugin;
+    provides IEntityProcessingService with dietz.asteroid.AsteroidProcessor;
     provides IAsteroidSplitter with dietz.asteroid.AsteroidSplitter;
 }
