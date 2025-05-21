@@ -16,19 +16,20 @@ public class BulletControlSystem implements IEntityProcessing, BulletSPI {
 
     @Override
     public Entity createBullet(Entity shooter, GameData gameData) {
-        Entity b = new Bullet();
-        b.setPolygonCoordinates(1, -1,  1,  1,  -1,  1,  -1, -1);
+        Bullet b = new Bullet();
+        b.setPolygonCoordinates(1, -1, 1, 1, -1, 1, -1, -1);
         b.setRadius(1f);
 
         double dx = Math.cos(Math.toRadians(shooter.getRotation()));
         double dy = Math.sin(Math.toRadians(shooter.getRotation()));
 
-        b.setX(shooter.getX() + dx * 10);
-        b.setY(shooter.getY() + dy * 10);
+        float safeDist = shooter.getRadius() + b.getRadius() + 2; // 2 px margin
+        b.setX(shooter.getX() + dx * safeDist);
+        b.setY(shooter.getY() + dy * safeDist);
         b.setRotation(shooter.getRotation());
-
         return b;
     }
+
 
     @Override
     public void process(GameData gameData, World world) {
@@ -44,12 +45,12 @@ public class BulletControlSystem implements IEntityProcessing, BulletSPI {
             e.setX(e.getX() + dx * velocity * dt);
             e.setY(e.getY() + dy * velocity * dt);
 
+            /*
             // expire off‐screen
             if (e.getX() < 0 || e.getX() > w ||
                     e.getY() < 0 || e.getY() > h) {
                 toRemove.add(e);
-            }
-
+            } */
 
         }
         toRemove.forEach(world::removeEntity);

@@ -5,19 +5,39 @@ import dietz.common.data.GameData;
 import dietz.common.data.World;
 import dietz.common.services.IGamePlugin;
 
+import java.util.Random;
+
 public class EnemyPlugin implements IGamePlugin {
     private String enemyId;
 
-    @Override
-    public void start(GameData gameData, World world) {
-        Enemy enemy = new Enemy();
-        enemy.setX(gameData.getDisplayWidth()  / 2.0 * Math.random());
-        enemy.setY(gameData.getDisplayHeight() / 2.0 * Math.random());
-        enemyId = world.addEntity(enemy);
-    }
+    private static final float RESPAWN_DELAY = 10f; // seconds
+
+    private float respawnTimer = 0f;
+    private final Random random = new Random();
 
     @Override
+    public void start(GameData gameData, World world) {
+        spawnEnemy(gameData, world);
+    }
+
+    // Respawn Enemy
+    @Override
     public void update(GameData gameData, World world) {
-        // all per‐frame work lives in EnemyControlSystem
+        if (!world.getEntities(Enemy.class).isEmpty()) {
+            respawnTimer = 0f;
+            return;
+        }
+        respawnTimer += gameData.getDeltaTime();
+        if (respawnTimer >= RESPAWN_DELAY) {
+            spawnEnemy(gameData, world);
+            respawnTimer = 0f;
+        }
+    }
+
+    private void spawnEnemy(GameData gameData, World world) {
+        Enemy enemy = new Enemy();
+        enemy.setX(random.nextDouble() * gameData.getDisplayWidth());
+        enemy.setY(random.nextDouble() * gameData.getDisplayHeight());
+        world.addEntity(enemy);
     }
 }
