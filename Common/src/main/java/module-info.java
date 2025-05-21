@@ -12,6 +12,7 @@ module Common {
     exports dietz.common.asteroid;
     exports dietz.common.bullet;
     exports dietz.common.ship;
+    exports dietz.common.components;
 
     uses IGamePluginService;
     uses IEntityProcessingService;

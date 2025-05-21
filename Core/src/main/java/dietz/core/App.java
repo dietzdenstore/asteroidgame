@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -36,6 +38,11 @@ public class App extends Application {
 
     private final List<IEntityProcessingService> processors     = new ArrayList<>();
     private final List<IPostEntityProcessingService> postProcessors = new ArrayList<>();
+
+    private final Glow glow = new Glow(1.0);
+    private final DropShadow glowShadow  = new DropShadow();
+
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -188,6 +195,10 @@ public class App extends Application {
                 poly.setFill(entityColor.darker());
                 poly.setStroke(entityColor.brighter());
                 poly.setStrokeWidth(3);
+                if(e.getType().equals("Bullet")) {
+                    poly.setEffect(glow);
+
+                }
 
                 gamePane.getChildren().add(poly);
                 entityViews.put(e.getID(), poly);

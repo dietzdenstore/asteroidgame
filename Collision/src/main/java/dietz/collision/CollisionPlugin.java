@@ -1,6 +1,7 @@
 package dietz.collision;
 
 import dietz.common.asteroid.IAsteroidSplitter;
+import dietz.common.components.Health;
 import dietz.common.data.*;
 import dietz.common.services.IPostEntityProcessingService;
 
@@ -29,13 +30,13 @@ public class CollisionPlugin implements IPostEntityProcessingService {
             for (int j = i + 1; j < entities.size(); j++) {
                 Entity e2 = entities.get(j);
                 if (collides(e1, e2)) {
-                    handleCollisionPair(e1, e2, world);
+                    handleCollision(e1, e2, world);
                 }
             }
         }
     }
 
-    private void handleCollisionPair(Entity e1, Entity e2, World world) {
+    private void handleCollision(Entity e1, Entity e2, World world) {
         String t1 = e1.getType();
         String t2 = e2.getType();
 
@@ -101,12 +102,9 @@ public class CollisionPlugin implements IPostEntityProcessingService {
                         world.removeEntity(e2);
                         splitAndRemoveAsteroid(e1, world);
                         break;
-
-
                     case "Asteroid":
                         elasticBounce(e1, e2);
                         break;
-
                 }
                 break;
         }
@@ -138,11 +136,9 @@ public class CollisionPlugin implements IPostEntityProcessingService {
     }
 
     private void elasticBounce(Entity e1, Entity e2) {
-        // approximate mass ∝ r²
         double m1 = e1.getRadius()*e1.getRadius();
         double m2 = e2.getRadius()*e2.getRadius();
 
-        // compute normalized collision normal n = (pos1-pos2)/|pos1-pos2|
         double dx = e1.getX() - e2.getX();
         double dy = e1.getY() - e2.getY();
         double dist = Math.sqrt(dx*dx + dy*dy);
@@ -150,16 +146,14 @@ public class CollisionPlugin implements IPostEntityProcessingService {
         double nx = dx/dist;
         double ny = dy/dist;
 
-        // relative velocity along n
+
         double dvx = e1.getDx() - e2.getDx();
         double dvy = e1.getDy() - e2.getDy();
         double vn = dvx*nx + dvy*ny;
         if (vn >= 0) return;  // separating already
 
-        // impulse scalar for perfectly elastic collision
         double j = (2 * vn) / (m1 + m2);
 
-        // apply impulse: v' = v – (j * m_other) * n
         e1.setDx(e1.getDx() - j * m2 * nx);
         e1.setDy(e1.getDy() - j * m2 * ny);
         e2.setDx(e2.getDx() + j * m1 * nx);

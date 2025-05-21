@@ -1,7 +1,7 @@
 package dietz.enemy;
 
 import dietz.common.data.Entity;
-import dietz.common.data.Health;
+import dietz.common.components.Health;
 import dietz.common.ship.ShipDesign;
 import javafx.scene.paint.Color;
 
@@ -19,10 +19,14 @@ public class   Enemy extends Entity {
     public static final int     maxEnemies   = 7;
     public static final float   respawnDelay = 3f;
 
+    public static final Color color = Color.RED;
+
+    private static ShipDesign design;
+
     private double dx = 0, dy = 0;
 
     public Enemy() {
-        ShipDesign design = ShipDesign.random();
+        design = ShipDesign.random();
         setPolygonCoordinates(design.getShape());
         setRadius(10f);
         setRotation(0);
@@ -36,6 +40,20 @@ public class   Enemy extends Entity {
 
     @Override
     public Color getBaseColor() {
-        return Color.DARKRED;
+        switch (design) {
+            case CLASSIC:
+                return color.brighter();
+            case ARROWHEAD:
+                return color.brighter();
+            case STEALTH:
+                return color.darker();
+            case TRIDENT:
+                return color.darker();
+            case PHANTOM:
+                return color.brighter();
+            default:
+                return color;
+        }
     }
 }
+

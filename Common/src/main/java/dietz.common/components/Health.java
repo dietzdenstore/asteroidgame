@@ -1,4 +1,4 @@
-package dietz.common.data;
+package dietz.common.components;
 
 public class Health {
     private double health;

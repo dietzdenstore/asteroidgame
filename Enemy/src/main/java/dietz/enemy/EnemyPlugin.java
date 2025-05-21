@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class EnemyPlugin implements IGamePluginService {
 private float respawnTimer = 0f;
-
     private final Random random = new Random();
 
     @Override

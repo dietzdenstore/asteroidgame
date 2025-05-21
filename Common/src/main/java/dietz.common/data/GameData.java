@@ -2,12 +2,11 @@ package dietz.common.data;
 
 public class GameData {
 
-
     private int displayWidth  = 1920;
     private int displayHeight = 900;
     private final GameKeys keys = new GameKeys();
-
     private float deltaTime;
+    private WallCollisionMode wallMode = WallCollisionMode.WRAP;
 
 
     public GameKeys getKeys() {
@@ -38,7 +37,6 @@ public class GameData {
         return deltaTime;
     }
 
-    private WallCollisionMode wallMode = WallCollisionMode.BOUNCE;
 
     public WallCollisionMode getWallMode() {
         return wallMode;

@@ -9,10 +9,10 @@ import java.util.Random;
 
 public class AsteroidPlugin implements IGamePluginService {
 
-    private int initialAsteroids = 5;
+    private int initialAsteroids = 3;
     static final int maximumAsteroids = 150;
     private float spawnTimer = 0;
-    private static final float spawnInterval = 5f;
+    private static final float spawnInterval = 3f;
     private static final double spawnBuffer = 200.0;
     private static final Random random = new Random();
 
@@ -25,7 +25,6 @@ public class AsteroidPlugin implements IGamePluginService {
 
     @Override
     public void update(GameData data, World world) {
-        // Periodic spawning of random-sized asteroids
         spawnTimer += data.getDeltaTime();
         if (spawnTimer >= spawnInterval) {
             spawnTimer = 0;
@@ -33,11 +32,10 @@ public class AsteroidPlugin implements IGamePluginService {
         }
     }
 
-
     private void spawnAsteroid(GameData data, World world, AsteroidSize size) {
         if (world.getEntityCount("Asteroid") >= maximumAsteroids) return;
-
         double[] pos = getEdgePosition(data, size.getRadius());
+
         // clamp to buffer circle around (0,0)
         double dist2 = pos[0] * pos[0] + pos[1] * pos[1];
         if (dist2 < spawnBuffer * spawnBuffer) {
@@ -84,17 +82,10 @@ public class AsteroidPlugin implements IGamePluginService {
         return new double[]{x, y};
     }
 
-    private double calculateAngleToCenter(double x, double y, GameData data) {
-        // Calculate direction toward screen center
-        double centerX = data.getDisplayWidth() / 2.0;
-        double centerY = data.getDisplayHeight() / 2.0;
-        return Math.toDegrees(Math.atan2(centerY - y, centerX - x));
-    }
-
     private AsteroidSize getRandomSize() {
-        // Weighted random selection (higher chance for larger asteroids)
         double rand = Math.random();
-        if (rand < 0.6) return AsteroidSize.LARGE;
+        if (rand < 0.5) return AsteroidSize.GIANT;
+        else if (rand < 0.7) return AsteroidSize.LARGE;
         else if (rand < 0.9) return AsteroidSize.MEDIUM;
         else return AsteroidSize.SMALL;
     }

@@ -8,27 +8,22 @@ import java.util.Random;
 
 public class Asteroid extends Entity {
     private final AsteroidSize size;
-    private final float        radius;   // the one true radius
-    private final double       dx, dy;   // velocities based on that radius
+    private final float        radius;
+    private final double       dx, dy;
     private static final Random random = new Random();
+    private static final Color color = Color.GRAY;
 
     public Asteroid(AsteroidSize size, double x, double y, double direction) {
         this.size = size;
 
-        // 1) pick a single, slightly‐random radius (±20%)
         float base = size.getRadius();
         this.radius = base * (0.8f + random.nextFloat() * 0.4f);
-
-        // 2) generate the fixed polygon once
         setPolygonCoordinates(generateShape(this.radius));
-
-        // 3) tell the collision system the true radius
         setRadius(this.radius);
 
         setX(x);
         setY(y);
 
-        // 4) compute speed inversely proportional to radius
         float speed = size.getSpeed();
 
         double rad = Math.toRadians(direction);
@@ -54,27 +49,25 @@ public class Asteroid extends Entity {
         return shape;
     }
 
-    /*
-    public void update(float dt, int width, int height) {
-        setX(getX() + dx * dt);
-        setY(getY() + dy * dt);
-
-        // screen wrapping
-        if (getX() < -radius)              setX(width  + radius);
-        else if (getX() > width  + radius) setX(-radius);
-
-        if (getY() < -radius)              setY(height + radius);
-        else if (getY() > height + radius) setY(-radius);
-    }
-     */
-
     public AsteroidSize getSize() {
         return size;
     }
 
+    //deriveColor(hue, saturation, brightness, opacity)
+
     @Override
     public Color getBaseColor() {
-        return Color.GRAY;
-    }
 
+        switch (size) {
+            case GIANT:
+            case LARGE:
+                return color.deriveColor(0, 1.0, 0.8, 1.0);
+            case MEDIUM:
+                return color.deriveColor(0, 1.0, 1.0, 1.0);
+            case SMALL:
+                return color.deriveColor(0, 1.0, 1.2, 1.0);
+            default:
+                return color;
+        }
+    }
 }
