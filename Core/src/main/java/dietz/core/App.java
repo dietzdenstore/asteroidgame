@@ -3,6 +3,7 @@ package dietz.core;
 import dietz.common.data.*;
 import dietz.common.services.IGamePluginService;
 import dietz.common.services.IPostEntityProcessingService;
+import dietz.common.util.ServiceLocator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -145,6 +146,10 @@ public class App extends Application {
         wallModeLabel.setTranslateX(10);
         wallModeLabel.setTranslateY(10);
         gamePane.getChildren().add(wallModeLabel);
+    }
+
+    private <T> Collection<T> locateAll(Class<T> service) {
+        return ServiceLocator.INSTANCE.locateAll(service);
     }
 
     private void loadPlugins() {

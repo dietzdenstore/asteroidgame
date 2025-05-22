@@ -3,6 +3,7 @@ import dietz.common.services.IPostEntityProcessingService;
 
 module Collision {
     requires Common;
+    requires Asteroid;
 
     exports dietz.collision;
 

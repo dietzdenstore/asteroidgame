@@ -4,20 +4,21 @@ import dietz.common.asteroid.IAsteroidSplitter;
 import dietz.common.components.Health;
 import dietz.common.data.*;
 import dietz.common.services.IPostEntityProcessingService;
-
+import dietz.common.util.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 
 public class CollisionPlugin implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
-    private static final float EPS = 0.001f;
 
     public CollisionPlugin() {
-        asteroidSplitter = ServiceLoader.load(IAsteroidSplitter.class)
-                .findFirst()
-                .orElse((original, world) -> {});
+        List<IAsteroidSplitter> splitters = ServiceLocator.INSTANCE.locateAll(IAsteroidSplitter.class);
+        if (!splitters.isEmpty()) {
+            this.asteroidSplitter = splitters.get(0);
+        } else {
+            this.asteroidSplitter = (original, world) -> { };
+        }
     }
 
     @Override

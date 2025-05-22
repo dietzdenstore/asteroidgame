@@ -1,9 +1,6 @@
 package dietz.enemy;
 
-import java.util.ServiceLoader;
-import java.util.Random;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import dietz.common.bullet.BulletSPI;
 import dietz.common.data.Entity;
@@ -11,6 +8,7 @@ import dietz.common.data.GameData;
 import dietz.common.data.WallCollisionMode;
 import dietz.common.data.World;
 import dietz.common.services.IEntityProcessingService;
+import dietz.common.util.ServiceLocator;
 
 public class EnemyControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
@@ -26,10 +24,8 @@ public class EnemyControlSystem implements IEntityProcessingService {
     private static final double shootChance = 0.02;
 
     public EnemyControlSystem() {
-        this.bulletSPI = ServiceLoader
-                .load(BulletSPI.class)
-                .findFirst()
-                .orElse(null);
+        List<BulletSPI> bullets = ServiceLocator.INSTANCE.locateAll(BulletSPI.class);
+        this.bulletSPI = bullets.isEmpty() ? null : bullets.get(0);
     }
 
     @Override

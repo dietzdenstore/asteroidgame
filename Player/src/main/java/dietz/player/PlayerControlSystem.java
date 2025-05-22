@@ -1,5 +1,6 @@
 package dietz.player;
 
+import java.util.List;
 import java.util.ServiceLoader;
 import dietz.common.bullet.BulletSPI;
 import dietz.common.data.Entity;
@@ -8,6 +9,7 @@ import dietz.common.data.GameKeys;
 import dietz.common.data.WallCollisionMode;
 import dietz.common.data.World;
 import dietz.common.services.IEntityProcessingService;
+import dietz.common.util.ServiceLocator;
 
 public class PlayerControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
@@ -16,11 +18,8 @@ public class PlayerControlSystem implements IEntityProcessingService {
     private static final double deaccelerationFactor = 0.97;
 
     public PlayerControlSystem() {
-        // load any BulletSPI provider (null if Bullet module absent)
-        this.bulletSPI = ServiceLoader
-                .load(BulletSPI.class)
-                .findFirst()
-                .orElse(null);
+        List<BulletSPI> bullets = ServiceLocator.INSTANCE.locateAll(BulletSPI.class);
+        this.bulletSPI = bullets.isEmpty() ? null : bullets.get(0);
     }
 
     @Override
