@@ -12,32 +12,15 @@ private float respawnTimer = 0f;
 
     @Override
     public void start(GameData gameData, World world) {
-            spawnEnemy(gameData, world, Enemy.enemyCount);
+        EnemyFactory.spawnEnemy(gameData, world, Enemy.enemyCount);
 
     }
 
     // Respawn Enemy
     @Override
-    public void update(GameData gameData, World world) {
-        respawnTimer += gameData.getDeltaTime();
-        if (respawnTimer >= Enemy.respawnDelay) {
-            int existing = world.getEntities(Enemy.class).size();
-            if (existing < Enemy.maxEnemies) {
-                int toSpawn = random.nextInt(3) + 1;
-                toSpawn = Math.min(toSpawn, Enemy.maxEnemies - existing);
-
-                spawnEnemy(gameData, world, toSpawn);
-            }
-            respawnTimer = 0f;
-        }
+    public void stop(GameData gameData, World world) {
+        world.getEntities(Enemy.class).forEach(world::removeEntity);
     }
 
-    private void spawnEnemy(GameData gameData, World world, int count) {
-        for (int i = 0; i < count; i++) {
-            Enemy enemy = new Enemy();
-            enemy.setX(random.nextDouble() * gameData.getDisplayWidth());
-            enemy.setY(random.nextDouble() * gameData.getDisplayHeight());
-            world.addEntity(enemy);
-        }
-    }
+
 }

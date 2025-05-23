@@ -13,6 +13,7 @@ import dietz.common.util.ServiceLocator;
 public class EnemyControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
     private final Random random = new Random();
+    private float respawnTimer = 0f;
 
     private final Map<String, Float> dirTimers    = new HashMap<>();
     private final Map<String, Double> dirAngles   = new HashMap<>();
@@ -92,6 +93,18 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 sc = fireRate;
             }
             shootCd.put(id, sc);
+
+            respawnTimer += gameData.getDeltaTime();
+            if (respawnTimer >= Enemy.respawnDelay) {
+                int existing = world.getEntities(Enemy.class).size();
+                if (existing < Enemy.maxEnemies) {
+                    int toSpawn = random.nextInt(3) + 1;
+                    toSpawn = Math.min(toSpawn, Enemy.maxEnemies - existing);
+
+                    EnemyFactory.spawnEnemy(gameData, world, toSpawn);
+                }
+                respawnTimer = 0f;
+            }
         }
     }
 }

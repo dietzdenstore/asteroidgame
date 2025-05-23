@@ -10,15 +10,7 @@ import dietz.common.data.World;
 import dietz.common.services.IEntityProcessingService;
 import javafx.scene.paint.Color;
 
-public class BulletControlSystem implements IEntityProcessingService, BulletSPI {
-
-    @Override
-    public Entity createBullet(Entity shooter, GameData gameData) {
-        double rotation = shooter.getRotation();
-        double x   = shooter.getX() + Math.cos(Math.toRadians(rotation)) * shooter.getRadius()*2;
-        double y   = shooter.getY() + Math.sin(Math.toRadians(rotation)) * shooter.getRadius()*2;
-        return new Bullet(x, y, rotation);
-    }
+public class BulletControlSystem implements IEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {

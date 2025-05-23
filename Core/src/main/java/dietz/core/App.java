@@ -86,10 +86,12 @@ public class App extends Application {
 
                 gameData.setDeltaTime(dt);
                 updateKeys();
-
+/*
                 for (IGamePluginService p : plugins) {
-                    p.update(gameData, world);
+                    p.stop(gameData, world);
                 }
+                */
+
                 for (IEntityProcessingService s : processors) {
                     s.process(gameData, world);
                 }

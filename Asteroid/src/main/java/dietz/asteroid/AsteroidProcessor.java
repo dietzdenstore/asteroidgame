@@ -1,11 +1,21 @@
 package dietz.asteroid;
 
+import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.Entity;
 import dietz.common.data.GameData;
 import dietz.common.data.World;
 import dietz.common.services.IEntityProcessingService;
 
+import java.util.Random;
+
+
 public class AsteroidProcessor implements IEntityProcessingService {
+    private int initialAsteroids = 3;
+    static final int maximumAsteroids = 150;
+    private static final double spawnBuffer = 200.0;
+    private static final Random random = new Random();
+    private float spawnTimer = 0;
+    private static final float spawnInterval = 3f;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -18,6 +28,11 @@ public class AsteroidProcessor implements IEntityProcessingService {
 
             // Screen wrapping
             wrapAroundScreen(asteroid, gameData);
+        }
+        spawnTimer += gameData.getDeltaTime();
+        if (spawnTimer >= spawnInterval) {
+            spawnTimer = 0;
+            AsteroidFactory.spawnAsteroid(gameData, world, AsteroidFactory.getRandomSize());
         }
     }
 
@@ -34,4 +49,6 @@ public class AsteroidProcessor implements IEntityProcessingService {
         asteroid.setX(x);
         asteroid.setY(y);
     }
+
+
 }

@@ -10,7 +10,7 @@ module Bullet {
 
     provides IEntityProcessingService with dietz.bullet.BulletControlSystem;
     provides IGamePluginService with dietz.bullet.BulletPlugin;
-    provides dietz.common.bullet.BulletSPI with dietz.bullet.BulletControlSystem;
+    provides dietz.common.bullet.BulletSPI with dietz.bullet.BulletFactory;
 
     exports dietz.bullet;
 }

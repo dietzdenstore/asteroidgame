@@ -5,11 +5,11 @@ import dietz.common.data.World;
 
 /**
  * Defines lifecycle methods for a game plugin.
- * Responsible for initializing and updating game world components each loop.
+ * Responsible for initializing and removing game world components.
  */
 public interface IGamePluginService {
     /**
-     * Called once when the plugin is first loaded.
+     * Called once when the game ends to clean up and remove this plugin’s entities from the world.
 
      * Preconditions:
      * @param gameData must not be null and contain valid game state information.
@@ -28,8 +28,8 @@ public interface IGamePluginService {
      * @param world must not be null and reflect the game world state before this update.
 
      * Postconditions:
-     * - The plugin's entities in the world have been updated according to gameData.
+     * - The plugin's entities in the world have been removed from world.
      */
-    void update(GameData gameData, World world);
+    void stop(GameData gameData, World world);
 
 }

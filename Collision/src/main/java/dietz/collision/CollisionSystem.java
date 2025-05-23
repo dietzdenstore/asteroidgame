@@ -8,11 +8,11 @@ import dietz.common.util.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionPlugin implements IPostEntityProcessingService {
+public class CollisionSystem implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
 
-    public CollisionPlugin() {
+    public CollisionSystem() {
         List<IAsteroidSplitter> splitters = ServiceLocator.INSTANCE.locateAll(IAsteroidSplitter.class);
         if (!splitters.isEmpty()) {
             this.asteroidSplitter = splitters.get(0);
