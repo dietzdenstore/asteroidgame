@@ -14,7 +14,7 @@ import dietz.common.util.ServiceLocator;
 public class PlayerControlSystem implements IEntityProcessingService {
     private final BulletSPI bulletSPI;
     private float shootCooldown = 0f;
-    private static final float fireRate = 0.05f;
+    private static final float fireRate = 0.08f;
     private static final double deaccelerationFactor = 0.97;
 
     public PlayerControlSystem() {

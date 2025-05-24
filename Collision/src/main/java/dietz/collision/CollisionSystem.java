@@ -11,6 +11,7 @@ import java.util.List;
 public class CollisionSystem implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
+    private final List<Entity> toSplit = new ArrayList<>();
 
     public CollisionSystem() {
         List<IAsteroidSplitter> splitters = ServiceLocator.INSTANCE.locateAll(IAsteroidSplitter.class);
@@ -23,6 +24,8 @@ public class CollisionSystem implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
+        toSplit.clear();
+
         List<Entity> entities = new ArrayList<>(world.getEntities());
 
         // O(N²) pair-wise test
@@ -33,6 +36,9 @@ public class CollisionSystem implements IPostEntityProcessingService {
                 if (collides(e1, e2)) {
                     handleCollision(e1, e2, world);
                 }
+            }
+            for (Entity asteroid : toSplit) {
+                asteroidSplitter.split(asteroid, world);
             }
         }
     }
@@ -120,7 +126,7 @@ public class CollisionSystem implements IPostEntityProcessingService {
 
 
     private void splitAndRemoveAsteroid(Entity asteroid, World world) {
-        asteroidSplitter.createSplitAsteroid(asteroid, world);
+        asteroidSplitter.split(asteroid, world);
         world.removeEntity(asteroid);
     }
 

@@ -1,6 +1,5 @@
 package dietz.asteroid;
 
-import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.Entity;
 import javafx.scene.paint.Color;
 

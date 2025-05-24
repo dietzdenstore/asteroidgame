@@ -1,6 +1,5 @@
 package dietz.asteroid;
 
-import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.Entity;
 import dietz.common.data.World;
 import dietz.common.asteroid.IAsteroidSplitter;
@@ -12,7 +11,7 @@ public class AsteroidSplitter implements IAsteroidSplitter {
     private static final Random random = new Random();
 
     @Override
-    public void createSplitAsteroid(Entity original, World world) {
+    public void split(Entity original, World world) {
         if (!(original instanceof Asteroid parent)) return;
 
         AsteroidSize parentSize = parent.getSize();

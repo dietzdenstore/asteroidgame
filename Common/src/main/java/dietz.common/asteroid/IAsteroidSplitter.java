@@ -18,5 +18,5 @@ public interface IAsteroidSplitter {
      * - The original asteroid is removed from the world.
      * - Two or more smaller asteroid fragments have been created and added to the world.
      */
-    void createSplitAsteroid(Entity original, World world);
+    void split(Entity original, World world);
 }

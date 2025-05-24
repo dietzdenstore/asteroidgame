@@ -5,16 +5,17 @@ import javafx.scene.paint.Color;
 
 public class Bullet extends Entity {
     private static final float velocity = 700f;
-    private static final Color color = Color.DEEPPINK;
+    private final Color color; //= Color.LIMEGREEN.brighter();
 
     private final double dx, dy;
 
-    public Bullet(double x, double y, double rotation) {
+    public Bullet(double x, double y, double rotation, Color color) {
+        this.color = color;
         setX(x);
         setY(y);
         setRotation(rotation);
-        setRadius(2f);
-        setPolygonCoordinates(1, -1,  1, 1,  -1, 1,  -1, -1);
+        setRadius(1f);
+        setPolygonCoordinates(4, -1,  4, 1,  -4, 1,  -4, -1);
 
         // pre-compute velocity vector
         double rad = Math.toRadians(rotation);
@@ -24,5 +25,7 @@ public class Bullet extends Entity {
 
     public double getDx()       { return dx; }
     public double getDy()       { return dy; }
+
+    @Override
     public Color  getBaseColor(){ return color; }
 }

@@ -7,9 +7,12 @@ import dietz.common.util.ServiceLocator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -34,15 +37,9 @@ public class App extends Application {
     private Scene scene;
 
     private Label wallModeLabel;
-    private Label decelLabel;
-    private Label fireRateLabel;
 
     private final List<IEntityProcessingService> processors     = new ArrayList<>();
     private final List<IPostEntityProcessingService> postProcessors = new ArrayList<>();
-
-    private final Glow glow = new Glow(1.0);
-    private final DropShadow glowShadow  = new DropShadow();
-
 
 
     @Override
@@ -86,11 +83,6 @@ public class App extends Application {
 
                 gameData.setDeltaTime(dt);
                 updateKeys();
-/*
-                for (IGamePluginService p : plugins) {
-                    p.stop(gameData, world);
-                }
-                */
 
                 for (IEntityProcessingService s : processors) {
                     s.process(gameData, world);
@@ -150,7 +142,7 @@ public class App extends Application {
         gamePane.getChildren().add(wallModeLabel);
     }
 
-    private <T> Collection<T> locateAll(Class<T> service) {
+    private <T>Collection<T> locateAll(Class<T> service) {
         return ServiceLocator.INSTANCE.locateAll(service);
     }
 
@@ -201,12 +193,23 @@ public class App extends Application {
 
                 poly.setFill(entityColor.darker());
                 poly.setStroke(entityColor.brighter());
-                poly.setStrokeWidth(3);
+                poly.setStrokeWidth(2);
+
+                //Bullet glow
                 if(e.getType().equals("Bullet")) {
-                    poly.setEffect(glow);
+                    DropShadow ds = new DropShadow(30, entityColor.brighter());
+                    ds.setSpread(0.7);
 
+                    Glow g = new Glow(0.3);
+                    g.setInput(ds);
+
+                    Bloom b = new Bloom(0.3);
+                    b.setInput(g);
+
+                    poly.setEffect(b);
+                    poly.setCache(true);
+                    poly.setCacheHint(CacheHint.QUALITY);
                 }
-
                 gamePane.getChildren().add(poly);
                 entityViews.put(e.getID(), poly);
             } else {

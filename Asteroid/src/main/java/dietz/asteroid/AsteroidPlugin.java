@@ -1,11 +1,8 @@
 package dietz.asteroid;
 
-import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.GameData;
 import dietz.common.services.IGamePluginService;
 import dietz.common.data.World;
-
-import java.util.Random;
 
 public class AsteroidPlugin implements IGamePluginService {
 

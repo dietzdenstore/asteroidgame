@@ -19,7 +19,7 @@ public class   Enemy extends Entity {
     public static final int     maxEnemies   = 7;
     public static final float   respawnDelay = 3f;
 
-    public static final Color color = Color.RED;
+    public static final Color color = Color.PURPLE;
 
     private static ShipDesign design;
 

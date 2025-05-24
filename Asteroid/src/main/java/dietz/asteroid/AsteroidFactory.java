@@ -1,6 +1,5 @@
 package dietz.asteroid;
 
-import dietz.common.asteroid.AsteroidSize;
 import dietz.common.data.GameData;
 import dietz.common.data.World;
 

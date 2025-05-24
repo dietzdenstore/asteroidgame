@@ -1,13 +1,12 @@
-package dietz.common.asteroid;
+package dietz.asteroid;
 
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.prefs.BackingStoreException;
 
 public enum AsteroidSize {
-    GIANT (90f, 150f, true, 2, 3),
-    LARGE ( 60f, 85f, true, 2, 3),
-    MEDIUM( 40f,55f, true, 0, 3),
-    SMALL ( 20f,  35f, false,0, 0);
+    GIANT (120f, 135f, true, 2, 3),
+    LARGE ( 90f, 105f, true, 2, 3),
+    MEDIUM( 60f,75f, true, 1, 3),
+    SMALL ( 30f,  45f, false,0, 0);
 
     private static final float BASE_SPEED = 500f;
 

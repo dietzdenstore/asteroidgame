@@ -9,7 +9,7 @@ public class Player extends Entity {
     public static final double acceleration = 300;  // px/sec²
     public static final double maxSpeed = 400;  // px/sec
     public static final double rotationSpeed = 250;  // deg/sec
-    public static final Color color = Color.NAVY;  // sec
+    public static final Color color = Color.DARKTURQUOISE;  // sec
 
     private double dx = 0, dy = 0;
 
