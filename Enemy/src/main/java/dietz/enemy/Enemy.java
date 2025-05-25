@@ -15,9 +15,9 @@ public class   Enemy extends Entity {
     public static final float  fireRate        = 0.05f;
     public static final double shootChance     = 0.02;
 
-    public static final int     enemyCount   = 5;
-    public static final int     maxEnemies   = 7;
-    public static final float   respawnDelay = 3f;
+    public static final int     enemyCount   = 1;
+    public static final int     maxEnemies   = 3;
+    public static final float   respawnDelay = 5f;
 
     public static final Color color = Color.PURPLE;
 

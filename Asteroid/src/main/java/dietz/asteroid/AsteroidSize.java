@@ -3,9 +3,9 @@ package dietz.asteroid;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum AsteroidSize {
-    GIANT (120f, 135f, true, 2, 3),
-    LARGE ( 90f, 105f, true, 2, 3),
-    MEDIUM( 60f,75f, true, 1, 3),
+    GIANT (80f, 95f, true, 2, 3),
+    LARGE ( 65f, 80f, true, 2, 3),
+    MEDIUM( 50f,65f, true, 2, 3),
     SMALL ( 30f,  45f, false,0, 0);
 
     private static final float BASE_SPEED = 500f;
