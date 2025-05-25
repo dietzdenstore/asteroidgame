@@ -1,0 +1,43 @@
+package dietz.core;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+import dietz.common.services.IGamePluginService;
+import dietz.common.services.IEntityProcessingService;
+import dietz.common.services.IPostEntityProcessingService;
+
+@Configuration
+public class ModuleConfig {
+    @Bean
+    public Game game(
+            List<IGamePluginService> gamePlugins,
+            List<IEntityProcessingService> entityProcessors,
+            List<IPostEntityProcessingService> postProcessors
+    ) {
+        return new Game(gamePlugins, entityProcessors, postProcessors);
+    }
+
+    @Bean
+    public List<IGamePluginService> gamePlugins() {
+        return ServiceLoader.load(IGamePluginService.class)
+                .stream().map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
+    }
+
+    @Bean
+    public List<IEntityProcessingService> entityProcessors() {
+        return ServiceLoader.load(IEntityProcessingService.class)
+                .stream().map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
+    }
+
+    @Bean
+    public List<IPostEntityProcessingService> postProcessors() {
+        return ServiceLoader.load(IPostEntityProcessingService.class)
+                .stream().map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
+    }
+}
