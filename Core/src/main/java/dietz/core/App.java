@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Bloom;
-import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -23,7 +22,14 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import dietz.common.services.IEntityProcessingService;
 
+import java.lang.module.Configuration;
+import java.lang.module.ModuleDescriptor;
+import java.lang.module.ModuleFinder;
+import java.lang.module.ModuleReference;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class App extends Application {
 
@@ -40,6 +46,7 @@ public class App extends Application {
 
     private final List<IEntityProcessingService> processors     = new ArrayList<>();
     private final List<IPostEntityProcessingService> postProcessors = new ArrayList<>();
+
 
 
     @Override
@@ -220,7 +227,16 @@ public class App extends Application {
         }
     }
 
+    private static ModuleLayer pluginLayer;
+
     public static void main(String[] args) {
+        Path pluginsDir = Paths.get("plugins");
+        ModuleFinder finder = ModuleFinder.of(pluginsDir);
+        List<String> names = finder.findAll().stream().map(ModuleReference::descriptor).map(ModuleDescriptor::name).collect(Collectors.toList());
+
+        Configuration cfg = ModuleLayer.boot().configuration().resolve(finder, ModuleFinder.of(), names);
+
+        pluginLayer = ModuleLayer.boot().defineModulesWithOneLoader(cfg, ClassLoader.getSystemClassLoader());
         launch(args);
     }
 }
