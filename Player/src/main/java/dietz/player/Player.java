@@ -6,8 +6,8 @@ import dietz.common.ship.ShipDesign;
 import javafx.scene.paint.Color;
 
 public class Player extends Entity {
-    public static final double acceleration = 300;  // px/sec²
-    public static final double maxSpeed = 400;  // px/sec
+    public static final double acceleration = 400;  // px/sec²
+    public static final double maxSpeed = 500;  // px/sec
     public static final double rotationSpeed = 250;  // deg/sec
     public static final Color color = Color.DARKTURQUOISE;  // sec
 
