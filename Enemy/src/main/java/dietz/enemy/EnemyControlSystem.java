@@ -25,8 +25,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
     private static final double shootChance = 0.02;
 
     public EnemyControlSystem() {
-        List<BulletSPI> bullets = ServiceLocator.INSTANCE.locateAll(BulletSPI.class);
-        this.bulletSPI = bullets.isEmpty() ? null : bullets.get(0);
+        this.bulletSPI = ServiceLoader.load(BulletSPI.class).findFirst().orElse(null);
     }
 
     @Override

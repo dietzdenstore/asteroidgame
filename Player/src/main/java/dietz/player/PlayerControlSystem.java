@@ -18,8 +18,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
     private static final double deaccelerationFactor = 0.97;
 
     public PlayerControlSystem() {
-        List<BulletSPI> bullets = ServiceLocator.INSTANCE.locateAll(BulletSPI.class);
-        this.bulletSPI = bullets.isEmpty() ? null : bullets.get(0);
+        this.bulletSPI = ServiceLoader.load(BulletSPI.class).findFirst().orElse(null);
     }
 
     @Override

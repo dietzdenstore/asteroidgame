@@ -142,26 +142,20 @@ public class App extends Application {
         gamePane.getChildren().add(wallModeLabel);
     }
 
-    private <T>Collection<T> locateAll(Class<T> service) {
+    private <T> Collection<T> locateAll(Class<T> service) {
         return ServiceLocator.INSTANCE.locateAll(service);
     }
 
     private void loadPlugins() {
-        ServiceLoader.load(IGamePluginService.class).forEach(new java.util.function.Consumer<IGamePluginService>() {
-            @Override
-            public void accept(IGamePluginService plugin) {
-                plugins.add(plugin);
-                plugin.start(gameData, world);
-            }
+        locateAll(IGamePluginService.class).forEach(p -> {
+            plugins.add(p);
+            p.start(gameData, world);
         });
     }
 
     private void loadProcessors() {
-        ServiceLoader.load(IEntityProcessingService.class)
-                .forEach(processors::add);
-
-        ServiceLoader.load(IPostEntityProcessingService.class)
-                .forEach(postProcessors::add);
+        processors.addAll(locateAll(IEntityProcessingService.class));
+        postProcessors.addAll(locateAll(IPostEntityProcessingService.class));
     }
 
     private void resizeArena() {

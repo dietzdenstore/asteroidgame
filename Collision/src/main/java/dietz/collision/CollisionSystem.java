@@ -7,6 +7,7 @@ import dietz.common.services.IPostEntityProcessingService;
 import dietz.common.util.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 
 public class CollisionSystem implements IPostEntityProcessingService {
 
@@ -14,13 +15,17 @@ public class CollisionSystem implements IPostEntityProcessingService {
     private final List<Entity> toSplit = new ArrayList<>();
 
     public CollisionSystem() {
-        List<IAsteroidSplitter> splitters = ServiceLocator.INSTANCE.locateAll(IAsteroidSplitter.class);
-        if (!splitters.isEmpty()) {
-            this.asteroidSplitter = splitters.get(0);
+        IAsteroidSplitter found = ServiceLoader.load(IAsteroidSplitter.class).findFirst().orElse(null);
+
+        if (found != null) {
+            this.asteroidSplitter = found;
         } else {
-            this.asteroidSplitter = (original, world) -> { };
+            this.asteroidSplitter = (original, world) -> {
+            };
         }
     }
+
+
 
     @Override
     public void process(GameData gameData, World world) {
