@@ -5,6 +5,12 @@ import dietz.common.components.Health;
 import dietz.common.data.*;
 import dietz.common.services.IPostEntityProcessingService;
 import dietz.common.util.ServiceLocator;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +18,8 @@ public class CollisionSystem implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
     private final List<Entity> toSplit = new ArrayList<>();
+
+    HttpClient client = HttpClient.newHttpClient();
 
     public CollisionSystem() {
         List<IAsteroidSplitter> splitters = ServiceLocator.INSTANCE.locateAll(IAsteroidSplitter.class);
@@ -85,6 +93,7 @@ public class CollisionSystem implements IPostEntityProcessingService {
                     case "Asteroid":
                         world.removeEntity(e1);
                         splitAndRemoveAsteroid(e2, world);
+                        incrementScore(1);
                         break;
                     case "Player":
                         damage(e2, world);
@@ -93,6 +102,7 @@ public class CollisionSystem implements IPostEntityProcessingService {
                     case "Enemy":
                         damage(e2, world);
                         world.removeEntity(e1);
+                        incrementScore(3);
                         break;
                 }
                 break;
@@ -108,6 +118,7 @@ public class CollisionSystem implements IPostEntityProcessingService {
                     case "Bullet":
                         world.removeEntity(e2);
                         splitAndRemoveAsteroid(e1, world);
+                        incrementScore(1);
                         break;
                     case "Asteroid":
                         elasticBounce(e1, e2);
@@ -165,5 +176,18 @@ public class CollisionSystem implements IPostEntityProcessingService {
         e1.setDy(e1.getDy() - j * m2 * ny);
         e2.setDx(e2.getDx() + j * m1 * nx);
         e2.setDy(e2.getDy() + j * m1 * ny);
+    }
+    private void incrementScore(int i) {
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/score/add/" + i))
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        client.sendAsync(req, HttpResponse.BodyHandlers.discarding())
+                .thenAccept(r -> System.out.println("score +"+i+" → "+r.statusCode()))
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
     }
 }
